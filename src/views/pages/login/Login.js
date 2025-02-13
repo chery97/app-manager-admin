@@ -15,8 +15,30 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
+import login from 'src/api/login'
 
 const Login = () => {
+  const FnLogin = async (userData) => {
+    const response = await login.signIn(userData)
+    return response.data
+  }
+
+  const loginMutation = useMutation({
+    mutationFn: FnLogin,
+    onSuccess: (data) => {
+      console.log('로그인 성공:', data)
+      // 예: 토큰 저장 및 페이지 이동
+      // localStorage.setItem('token', data.token)
+    },
+    onError: (error) => {
+      console.error('로그인 실패:', error)
+    },
+  })
+  const handleLogin = () => {
+    loginMutation.mutate({ username: 'test@example.com', password: 'password123' })
+  }
   return (
     <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -46,7 +68,7 @@ const Login = () => {
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4">
+                        <CButton color="primary" className="px-4" onClick={handleLogin}>
                           Login
                         </CButton>
                       </CCol>

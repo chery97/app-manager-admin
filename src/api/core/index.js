@@ -32,10 +32,4 @@ authRequest.interceptors.response.use(
   },
 )
 
-// 예제: API 요청 보내기
-authRequest
-  .get('/user/profile')
-  .then((res) => console.log(res.data))
-  .catch((err) => console.error(err))
-
 export default authRequest

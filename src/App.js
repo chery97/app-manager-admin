@@ -1,8 +1,17 @@
-import React, { Suspense, useEffect } from 'react'
-import { HashRouter, Route, Routes } from 'react-router-dom'
+import React, { Suspense, useEffect, useState } from 'react'
+import { HashRouter, Route, Routes, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
-import { CSpinner, useColorModes } from '@coreui/react'
+import {
+  CButton,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,
+  CSpinner,
+  useColorModes,
+} from '@coreui/react'
 import './scss/style.scss'
 
 // We use those styles to show code examples, you should remove them in your application.
@@ -49,10 +58,43 @@ const App = () => {
           <Route exact path="/register" name="Register Page" element={<Register />} />
           <Route exact path="/404" name="Page 404" element={<Page404 />} />
           <Route exact path="/500" name="Page 500" element={<Page500 />} />
-          <Route path="*" name="Home" element={<DefaultLayout />} />
+          <Route path="*" name="Home" element={<ProtectedRoute />} />
         </Routes>
       </Suspense>
     </HashRouter>
+  )
+}
+
+// [Jay] 로그인 체크 컴포넌트
+const ProtectedRoute = () => {
+  const [showModal, setShowModal] = useState(false)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      setShowModal(true) // 토큰이 없으면 모달 표시
+    }
+  }, [])
+
+  return (
+    <>
+      <DefaultLayout />
+      {/*토큰값이 없는 경우 모달 알럿 노출*/}
+      {showModal && (
+        <CModal visible={showModal} onClose={() => navigate('/login')}>
+          <CModalHeader>
+            <CModalTitle>로그인이 필요합니다</CModalTitle>
+          </CModalHeader>
+          <CModalBody>로그인 상태가 만료되었습니다. 다시 로그인해주세요.</CModalBody>
+          <CModalFooter>
+            <CButton color="secondary" onClick={() => navigate('/login')}>
+              로그인 페이지로 이동
+            </CButton>
+          </CModalFooter>
+        </CModal>
+      )}
+    </>
   )
 }
 

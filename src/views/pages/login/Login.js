@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -20,6 +20,8 @@ import axios from 'axios'
 import login from 'src/api/login'
 
 const Login = () => {
+  const navigate = useNavigate()
+
   const FnLogin = async (userData) => {
     const response = await login.signIn(userData)
     return response.data
@@ -28,9 +30,10 @@ const Login = () => {
   const loginMutation = useMutation({
     mutationFn: FnLogin,
     onSuccess: (data) => {
-      console.log('로그인 성공:', data)
-      // 예: 토큰 저장 및 페이지 이동
-      // localStorage.setItem('token', data.token)
+      // [Jay] 엑세스 토큰값 저장
+      const { access_token } = data
+      localStorage.setItem('token', access_token)
+      navigate('/dashboard') // 로그인 성공 시 대시보드로 이동
     },
     onError: (error) => {
       console.error('로그인 실패:', error)

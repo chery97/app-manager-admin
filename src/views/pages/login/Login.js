@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   CButton,
@@ -11,16 +11,30 @@ import {
   CFormInput,
   CInputGroup,
   CInputGroupText,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import { useMutation } from '@tanstack/react-query'
-import axios from 'axios'
 import login from 'src/api/login'
+import { useForm } from 'react-hook-form'
 
 const Login = () => {
   const navigate = useNavigate()
+  const [showModal, setShowModal] = useState(false) // 모달 노출 상태값
+  const [modalMsg, setModalMsg] = useState('') // 모달 메세지
+
+  const {
+    register, // 입력 필드와 연결
+    handleSubmit, // 폼 제출 핸들러
+    watch, // 현재 입력값을 추적
+    formState: { errors }, // 입력값 검증 에러 관리
+  } = useForm()
 
   const FnLogin = async (userData) => {
     const response = await login.signIn(userData)
@@ -30,17 +44,19 @@ const Login = () => {
   const loginMutation = useMutation({
     mutationFn: FnLogin,
     onSuccess: (data) => {
-      // [Jay] 엑세스 토큰값 저장
-      const { access_token } = data
-      localStorage.setItem('token', access_token)
+      const { access_token, refresh_token } = data
+      // [Jay] 엑세스 토큰값 로컬스토리지 저장
+      localStorage.setItem('GEEK_SSID', access_token)
+      localStorage.setItem('GEEK_SSRID', refresh_token)
       navigate('/dashboard') // 로그인 성공 시 대시보드로 이동
     },
     onError: (error) => {
-      console.error('로그인 실패:', error)
+      setModalMsg(error?.response?.data?.message)
+      setShowModal(true)
     },
   })
-  const handleLogin = () => {
-    loginMutation.mutate({ username: 'test@example.com', password: 'password123' })
+  const handleLogin = (data) => {
+    loginMutation.mutate({ id: data.id, password: data.password })
   }
   return (
     <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
@@ -50,14 +66,18 @@ const Login = () => {
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                  <CForm>
+                  <CForm onSubmit={handleSubmit(handleLogin)}>
                     <h1>Login</h1>
                     <p className="text-body-secondary">Sign In to your account</p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" />
+                      <CFormInput
+                        placeholder="Username"
+                        autoComplete="username"
+                        {...register('id', { required: '아이디를 입력하세요.' })}
+                      />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
@@ -67,11 +87,12 @@ const Login = () => {
                         type="password"
                         placeholder="Password"
                         autoComplete="current-password"
+                        {...register('password', { required: '비밀번호를 입력하세요.' })}
                       />
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4" onClick={handleLogin}>
+                        <CButton color="primary" className="px-4" type="submit">
                           Login
                         </CButton>
                       </CCol>
@@ -104,6 +125,23 @@ const Login = () => {
           </CCol>
         </CRow>
       </CContainer>
+
+      <CModal visible={showModal}>
+        <CModalHeader>
+          <CModalTitle></CModalTitle>
+        </CModalHeader>
+        <CModalBody>{modalMsg}</CModalBody>
+        <CModalFooter>
+          <CButton
+            color="secondary"
+            onClick={() => {
+              setShowModal(false)
+            }}
+          >
+            닫기
+          </CButton>
+        </CModalFooter>
+      </CModal>
     </div>
   )
 }

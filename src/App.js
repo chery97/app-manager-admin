@@ -71,7 +71,7 @@ const ProtectedRoute = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('GEEK_SSID')
     if (!token) {
       setShowModal(true) // 토큰이 없으면 모달 표시
     }

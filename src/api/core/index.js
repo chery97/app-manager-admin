@@ -9,7 +9,7 @@ const authRequest = axios.create({
 // 요청 인터셉터 설정
 authRequest.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token') // 토큰 가져오기
+    const token = localStorage.getItem('GEEK_SSID') // 토큰 가져오기
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }

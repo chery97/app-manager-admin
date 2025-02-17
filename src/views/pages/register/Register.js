@@ -83,9 +83,11 @@ const Register = () => {
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
                     <CFormInput
+                      type="text"
                       placeholder="아이디를 입력해주세요"
                       autoComplete="userId"
                       {...register('id', { required: '아이디를 입력하세요.' })}
+                      required
                     />
                   </CInputGroup>
                   {/*<CInputGroup className="mb-3">*/}
@@ -101,6 +103,7 @@ const Register = () => {
                       placeholder="비밀번호를 입력해주세요"
                       autoComplete="new-password"
                       {...register('password', { required: '비밀번호를 입력하세요.' })}
+                      required
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
@@ -111,6 +114,7 @@ const Register = () => {
                       placeholder="업체명을 입력해주세요"
                       autoComplete="userName"
                       {...register('userName', { required: '업체명을 입력하세요.' })}
+                      required
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
@@ -122,6 +126,7 @@ const Register = () => {
                       placeholder="이메일을 입력해주세요"
                       autoComplete="userEmail"
                       {...register('userEmail', { required: '이메일을 입력하세요.' })}
+                      required
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
@@ -133,16 +138,19 @@ const Register = () => {
                       autoComplete="userTel1"
                       {...register('userTel1', { required: '전화번호를 입력하세요.' })}
                       options={phoneOptions}
+                      required
                     />
                     <CFormInput
                       className="m-1"
                       autoComplete="userTel2"
                       {...register('userTel2', { required: '전화번호를 입력하세요.' })}
+                      required
                     />
                     <CFormInput
                       className="m-1"
                       autoComplete="userTel3"
                       {...register('userTel3', { required: '전화번호를 입력하세요.' })}
+                      required
                     />
                   </CInputGroup>
                   {/*<CInputGroup className="mb-4">*/}

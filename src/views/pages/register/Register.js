@@ -7,6 +7,7 @@ import {
   CContainer,
   CForm,
   CFormInput,
+  CFormSelect,
   CInputGroup,
   CInputGroupText,
   CModal,
@@ -17,7 +18,7 @@ import {
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser, cilHome, cilEnvelopeOpen } from '@coreui/icons'
+import { cilLockLocked, cilUser, cilHome, cilEnvelopeOpen, cilPhone } from '@coreui/icons'
 import login from 'src/api/login'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
@@ -60,10 +61,12 @@ const Register = () => {
       password: data.password,
       userName: data.userName,
       userEmail: data.userEmail,
-      userTel: data.userTel,
+      userTel: data.userTel1 + data.userTel2 + data.userTel3,
     })
   }
   // END
+
+  const phoneOptions = ['010', '011', '016', '017', '018', '019']
 
   return (
     <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
@@ -122,13 +125,24 @@ const Register = () => {
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-3">
-                    <CInputGroupText>
-                      <CIcon icon={cilUser} />
+                    <CInputGroupText className="h-30">
+                      <CIcon icon={cilPhone} />
                     </CInputGroupText>
+                    <CFormSelect
+                      className="m-1"
+                      autoComplete="userTel1"
+                      {...register('userTel1', { required: '전화번호를 입력하세요.' })}
+                      options={phoneOptions}
+                    />
                     <CFormInput
-                      placeholder="전화번호를 입력해주세요"
-                      autoComplete="userTel"
-                      {...register('userTel', { required: '전화번호를 입력하세요.' })}
+                      className="m-1"
+                      autoComplete="userTel2"
+                      {...register('userTel2', { required: '전화번호를 입력하세요.' })}
+                    />
+                    <CFormInput
+                      className="m-1"
+                      autoComplete="userTel3"
+                      {...register('userTel3', { required: '전화번호를 입력하세요.' })}
                     />
                   </CInputGroup>
                   {/*<CInputGroup className="mb-4">*/}

@@ -4,14 +4,14 @@ const login = {
   join: (data) => {
     return authRequest({
       method: 'POST',
-      url: '/manager/join',
+      url: '/users/join',
       data,
     })
   },
   signIn: (data) => {
     return authRequest({
       method: 'POST',
-      url: '/manager/login',
+      url: '/users/login',
       data,
     })
   },

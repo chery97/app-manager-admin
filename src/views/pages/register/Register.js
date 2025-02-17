@@ -17,7 +17,7 @@ import {
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser } from '@coreui/icons'
+import { cilLockLocked, cilUser, cilHome, cilEnvelopeOpen } from '@coreui/icons'
 import login from 'src/api/login'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
@@ -55,7 +55,13 @@ const Register = () => {
     },
   })
   const onSubmit = (data) => {
-    joinMutation.mutate({ id: data.id, password: data.password })
+    joinMutation.mutate({
+      id: data.id,
+      password: data.password,
+      userName: data.userName,
+      userEmail: data.userEmail,
+      userTel: data.userTel,
+    })
   }
   // END
 
@@ -74,8 +80,8 @@ const Register = () => {
                       <CIcon icon={cilUser} />
                     </CInputGroupText>
                     <CFormInput
-                      placeholder="Username"
-                      autoComplete="username"
+                      placeholder="아이디를 입력해주세요"
+                      autoComplete="userId"
                       {...register('id', { required: '아이디를 입력하세요.' })}
                     />
                   </CInputGroup>
@@ -89,9 +95,40 @@ const Register = () => {
                     </CInputGroupText>
                     <CFormInput
                       type="password"
-                      placeholder="Password"
+                      placeholder="비밀번호를 입력해주세요"
                       autoComplete="new-password"
                       {...register('password', { required: '비밀번호를 입력하세요.' })}
+                    />
+                  </CInputGroup>
+                  <CInputGroup className="mb-3">
+                    <CInputGroupText>
+                      <CIcon icon={cilHome} />
+                    </CInputGroupText>
+                    <CFormInput
+                      placeholder="업체명을 입력해주세요"
+                      autoComplete="userName"
+                      {...register('userName', { required: '업체명을 입력하세요.' })}
+                    />
+                  </CInputGroup>
+                  <CInputGroup className="mb-3">
+                    <CInputGroupText>
+                      <CIcon icon={cilEnvelopeOpen} />
+                    </CInputGroupText>
+                    <CFormInput
+                      type="email"
+                      placeholder="이메일을 입력해주세요"
+                      autoComplete="userEmail"
+                      {...register('userEmail', { required: '이메일을 입력하세요.' })}
+                    />
+                  </CInputGroup>
+                  <CInputGroup className="mb-3">
+                    <CInputGroupText>
+                      <CIcon icon={cilUser} />
+                    </CInputGroupText>
+                    <CFormInput
+                      placeholder="전화번호를 입력해주세요"
+                      autoComplete="userTel"
+                      {...register('userTel', { required: '전화번호를 입력하세요.' })}
                     />
                   </CInputGroup>
                   {/*<CInputGroup className="mb-4">*/}

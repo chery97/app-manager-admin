@@ -1,7 +1,6 @@
-import React, {useEffect, useState} from 'react'
-import { CTable, CButton } from '@coreui/react'
+import React, { useEffect, useState } from 'react'
+import { CTable, CButton, CPagination, CPaginationItem } from '@coreui/react'
 import user from 'src/api/user'
-import login from "src/api/login";
 
 const Partner = () => {
   const columns = [
@@ -41,37 +40,65 @@ const Partner = () => {
       _props: { scope: 'col' },
     },
   ]
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState([])
+  const [page, setPage] = useState(1)
+  const [pageSize] = useState(10)
+  const [totalPages, setTotalPages] = useState(1)
 
+  const fetchData = async (currentPage) => {
+    try {
+      const { data } = await user.findAll({ pageSize, page: currentPage })
+
+      setItems(
+        data.items.map((item, index) => ({
+          details: (
+            <CButton color="light" size="sm">
+              이동
+            </CButton>
+          ),
+          sno: (currentPage - 1) * pageSize + index + 1,
+          userType: item.userType,
+          id: item.id,
+          userName: item.userName,
+          userTel: item.userTel,
+          userEmail: item.userEmail,
+        })),
+      )
+      setTotalPages(data.totalPage)
+    } catch (error) {
+      console.error('error:', error)
+    }
+  }
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data } = await user.findAll({ pageSize: 10, page: 1 })
+    fetchData(page)
+  }, [page])
 
-        setItems(
-          data.items.map((item, index) => ({
-            details: (
-              <CButton color="light" size="sm">
-                이동
-              </CButton>
-            ),
-            sno: index + 1,
-            userType: item.userType,
-            id: item.id,
-            userName: item.userName,
-            userTel: item.userTel,
-            userEmail: item.userEmail,
-          })),
-        )
-      } catch (error) {
-        console.error('데이터 가져오기 실패:', error)
-      }
-    }
+  return (
+    <div>
+      <CTable striped columns={columns} items={items} />
+      <CPagination align="center">
+        <CPaginationItem
+          disabled={page === 1}
+          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+        >
+          이전
+        </CPaginationItem>
 
-    fetchData()
-  }, [])
+        {[...Array(totalPages)].map((_, i) => (
+          <CPaginationItem key={i} active={i + 1 === page} onClick={() => setPage(i + 1)}>
+            {i + 1}
+          </CPaginationItem>
+        ))}
 
-  return <CTable striped columns={columns} items={items} />
+        <CPaginationItem
+          disabled={page === totalPages}
+          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+        >
+          다음
+        </CPaginationItem>
+      </CPagination>
+    </div>
+  )
 }
 export default Partner

@@ -1,10 +1,10 @@
 import authRequest from '/src/api/core/index'
 
 const user = {
-  findAll: () => {
+  findAll: (query) => {
     return authRequest({
       method: 'GET',
-      url: '/users',
+      url: `/users?pageSize${query.pageSize}&page=${query.page}`,
     })
   },
 }

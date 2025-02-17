@@ -52,7 +52,7 @@ const Partner = () => {
       setItems(
         data.items.map((item, index) => ({
           details: (
-            <CButton color="light" size="sm">
+            <CButton color="light" size="sm" href={`#/partner/${item.sno}`}>
               이동
             </CButton>
           ),

@@ -54,6 +54,7 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 // Geek Pages
 const Login = React.lazy(() => import('./views/pages/login/Login'))
 const Partner = React.lazy(() => import('./views/pages/partner/Partner'))
+const PartnerRegister = React.lazy(() => import('./views/pages/partner/PartnerRegister'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -104,6 +105,7 @@ const routes = [
   // geek custom
   { path: '/login', name: 'Login', element: Login },
   { path: '/partner', name: 'Partner', element: Partner },
+  { path: '/partner/:sno', name: 'Partner Detail', element: PartnerRegister },
 ]
 
 export default routes

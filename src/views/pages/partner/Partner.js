@@ -1,5 +1,7 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import { CTable, CButton } from '@coreui/react'
+import user from 'src/api/user'
+import login from "src/api/login";
 
 const Partner = () => {
   const columns = [
@@ -39,17 +41,36 @@ const Partner = () => {
       _props: { scope: 'col' },
     },
   ]
-  const items = [
-    {
-      details: <CButton color="light" size="sm">이동</CButton>,
-      sno: 1,
-      userType: 'partner',
-      id: 'testId',
-      userName: 'testName',
-      userTel: '010-1234-5678',
-      userEmail: 'test@gmail.com',
-    },
-  ]
+  const [items, setItems] = useState([]);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await user.findAll({ pageSize: 10, page: 1 })
+
+        setItems(
+          data.items.map((item, index) => ({
+            details: (
+              <CButton color="light" size="sm">
+                이동
+              </CButton>
+            ),
+            sno: index + 1,
+            userType: item.userType,
+            id: item.id,
+            userName: item.userName,
+            userTel: item.userTel,
+            userEmail: item.userEmail,
+          })),
+        )
+      } catch (error) {
+        console.error('데이터 가져오기 실패:', error)
+      }
+    }
+
+    fetchData()
+  }, [])
 
   return <CTable striped columns={columns} items={items} />
 }

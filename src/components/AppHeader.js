@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react'
-import { NavLink } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import { cilContrast, cilMenu, cilMoon, cilSun } from '@coreui/icons'
+import CIcon from '@coreui/icons-react'
 import {
+  CButton,
   CContainer,
   CDropdown,
   CDropdownItem,
@@ -10,23 +10,16 @@ import {
   CHeader,
   CHeaderNav,
   CHeaderToggler,
-  CNavLink,
   CNavItem,
+  CNavLink,
   useColorModes,
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import {
-  cilBell,
-  cilContrast,
-  cilEnvelopeOpen,
-  cilList,
-  cilMenu,
-  cilMoon,
-  cilSun,
-} from '@coreui/icons'
+import React, { useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { NavLink } from 'react-router-dom'
 
-import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
+import { AppBreadcrumb } from './index'
 
 const AppHeader = () => {
   const headerRef = useRef()
@@ -64,29 +57,14 @@ const AppHeader = () => {
             <CNavLink href="#">Settings</CNavLink>
           </CNavItem>
         </CHeaderNav>
-        <CHeaderNav className="ms-auto">
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilBell} size="lg" />
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilList} size="lg" />
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">
-              <CIcon icon={cilEnvelopeOpen} size="lg" />
-            </CNavLink>
-          </CNavItem>
-        </CHeaderNav>
-        <CHeaderNav>
-          <li className="nav-item py-1">
-            <div className="vr h-100 mx-2 text-body text-opacity-75"></div>
-          </li>
-          <CDropdown variant="nav-item" placement="bottom-end">
-            <CDropdownToggle caret={false}>
+        <CHeaderNav className="ms-auto" />
+        <CHeaderNav className="d-flex align-items-center gap-3">
+          <CDropdown
+            variant="nav-item"
+            placement="bottom-end"
+            className="d-flex align-items-center"
+          >
+            <CDropdownToggle className="p-0" caret={false} style={{ lineHeight: 0 }}>
               {colorMode === 'dark' ? (
                 <CIcon icon={cilMoon} size="lg" />
               ) : colorMode === 'auto' ? (
@@ -125,10 +103,17 @@ const AppHeader = () => {
               </CDropdownItem>
             </CDropdownMenu>
           </CDropdown>
-          <li className="nav-item py-1">
-            <div className="vr h-100 mx-2 text-body text-opacity-75"></div>
-          </li>
           <AppHeaderDropdown />
+          <CButton
+            className="p-0"
+            variant="ghost"
+            style={{
+              border: 'none',
+            }}
+            onClick={() => alert('로그아웃')}
+          >
+            <span>로그아웃</span>
+          </CButton>
         </CHeaderNav>
       </CContainer>
       <CContainer className="px-4" fluid>

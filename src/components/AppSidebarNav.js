@@ -1,11 +1,11 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import PropTypes from 'prop-types'
 
 import SimpleBar from 'simplebar-react'
 import 'simplebar-react/dist/simplebar.min.css'
 
-import { CBadge, CNavLink, CSidebarNav } from '@coreui/react'
+import { CNavLink, CSidebarNav } from '@coreui/react'
 
 export const AppSidebarNav = ({ items }) => {
   const navLink = (name, icon, badge, indent = false) => {
@@ -19,11 +19,6 @@ export const AppSidebarNav = ({ items }) => {
               </span>
             )}
         {name && name}
-        {badge && (
-          <CBadge color={badge.color} className="ms-auto" size="sm">
-            {badge.text}
-          </CBadge>
-        )}
       </>
     )
   }

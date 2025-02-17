@@ -1,5 +1,3 @@
-import React from 'react'
-import CIcon from '@coreui/icons-react'
 import {
   cilBell,
   cilCalculator,
@@ -8,28 +6,47 @@ import {
   cilDescription,
   cilDrop,
   cilExternalLink,
+  cilHome,
   cilNotes,
   cilPencil,
+  cilPeople,
   cilPuzzle,
-  cilSpeedometer,
   cilStar,
+  cilWindowRestore,
 } from '@coreui/icons'
+import CIcon from '@coreui/icons-react'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
+import React from 'react'
+import PATHS from 'src/const/path'
 
 const _nav = [
   {
     component: CNavItem,
-    name: 'Dashboard',
+    name: 'APP ADMIN',
     to: '/dashboard',
-    icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
-    badge: {
-      color: 'info',
-      text: 'NEW',
-    },
+    icon: <CIcon icon={cilHome} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,
-    name: 'Theme',
+    name: '서비스 관리',
+  },
+  {
+    component: CNavItem,
+    name: '관리자 관리',
+    to: PATHS.SERVICE.ADMIN,
+    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: '파트너 관리',
+    to: PATHS.SERVICE.PARTNER,
+    icon: <CIcon icon={cilPeople} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: '애플리케이션 관리',
+    to: PATHS.SERVICE.APPLICATION,
+    icon: <CIcon icon={cilWindowRestore} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
@@ -45,7 +62,25 @@ const _nav = [
   },
   {
     component: CNavTitle,
-    name: 'Components',
+    name: '애플리케이션',
+  },
+  {
+    component: CNavGroup,
+    name: '앱 푸시',
+    to: '/app/push',
+    icon: <CIcon icon={cilBell} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: '푸시발송',
+        to: PATHS.APPLICATION.APP_PUSH.SEND,
+      },
+      {
+        component: CNavItem,
+        name: '내역조회',
+        to: PATHS.APPLICATION.APP_PUSH.HISTORY,
+      },
+    ],
   },
   {
     component: CNavGroup,
@@ -72,10 +107,6 @@ const _nav = [
           </React.Fragment>
         ),
         href: 'https://coreui.io/react/docs/components/calendar/',
-        badge: {
-          color: 'danger',
-          text: 'PRO',
-        },
       },
       {
         component: CNavItem,
@@ -126,10 +157,6 @@ const _nav = [
         component: CNavItem,
         name: 'Smart Pagination',
         href: 'https://coreui.io/react/docs/components/smart-pagination/',
-        badge: {
-          color: 'danger',
-          text: 'PRO',
-        },
       },
       {
         component: CNavItem,
@@ -140,10 +167,6 @@ const _nav = [
           </React.Fragment>
         ),
         href: 'https://coreui.io/react/docs/components/smart-table/',
-        badge: {
-          color: 'danger',
-          text: 'PRO',
-        },
       },
       {
         component: CNavItem,
@@ -174,10 +197,6 @@ const _nav = [
           </React.Fragment>
         ),
         href: 'https://coreui.io/react/docs/components/virtual-scroller/',
-        badge: {
-          color: 'danger',
-          text: 'PRO',
-        },
       },
     ],
   },
@@ -211,10 +230,6 @@ const _nav = [
           </React.Fragment>
         ),
         href: 'https://coreui.io/react/docs/components/loading-button/',
-        badge: {
-          color: 'danger',
-          text: 'PRO',
-        },
       },
     ],
   },
@@ -242,10 +257,6 @@ const _nav = [
           </React.Fragment>
         ),
         href: 'https://coreui.io/react/docs/forms/multi-select/',
-        badge: {
-          color: 'danger',
-          text: 'PRO',
-        },
       },
       {
         component: CNavItem,
@@ -266,10 +277,6 @@ const _nav = [
           </React.Fragment>
         ),
         href: 'https://coreui.io/react/docs/forms/range-slider/',
-        badge: {
-          color: 'danger',
-          text: 'PRO',
-        },
       },
       {
         component: CNavItem,
@@ -280,10 +287,6 @@ const _nav = [
           </React.Fragment>
         ),
         href: 'https://coreui.io/react/docs/forms/rating/',
-        badge: {
-          color: 'danger',
-          text: 'PRO',
-        },
       },
       {
         component: CNavItem,
@@ -304,19 +307,11 @@ const _nav = [
           </React.Fragment>
         ),
         href: 'https://coreui.io/react/docs/forms/date-picker/',
-        badge: {
-          color: 'danger',
-          text: 'PRO',
-        },
       },
       {
         component: CNavItem,
         name: 'Date Range Picker',
         href: 'https://coreui.io/react/docs/forms/date-range-picker/',
-        badge: {
-          color: 'danger',
-          text: 'PRO',
-        },
       },
       {
         component: CNavItem,
@@ -327,10 +322,6 @@ const _nav = [
           </React.Fragment>
         ),
         href: 'https://coreui.io/react/docs/forms/time-picker/',
-        badge: {
-          color: 'danger',
-          text: 'PRO',
-        },
       },
       {
         component: CNavItem,
@@ -404,10 +395,6 @@ const _nav = [
     name: 'Widgets',
     to: '/widgets',
     icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
-    badge: {
-      color: 'info',
-      text: 'NEW',
-    },
   },
   {
     component: CNavTitle,

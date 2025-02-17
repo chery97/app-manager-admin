@@ -438,6 +438,11 @@ const _nav = [
         name: 'Error 500',
         to: '/500',
       },
+      {
+        component: CNavItem,
+        name: '고객사 관리',
+        to: '/partner',
+      },
     ],
   },
   {

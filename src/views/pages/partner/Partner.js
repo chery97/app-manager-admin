@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { CTable, CButton, CPagination, CPaginationItem } from '@coreui/react'
+import {
+  CTable,
+  CButton,
+  CPagination,
+  CPaginationItem,
+  CInputGroup,
+  CFormInput,
+  CFormSelect,
+} from '@coreui/react'
 import user from 'src/api/user'
+import CIcon from '@coreui/icons-react'
+import { cilSearch } from '@coreui/icons'
 
 const Partner = () => {
   const columns = [
@@ -41,13 +51,21 @@ const Partner = () => {
     },
   ]
   const [items, setItems] = useState([])
+  const [searchType, setSearchType] = useState('')
+  const [searchKeyword, setSearchKeyword] = useState('')
   const [page, setPage] = useState(1)
   const [pageSize] = useState(10)
   const [totalPages, setTotalPages] = useState(1)
 
-  const fetchData = async (currentPage) => {
+  const fetchData = async (params) => {
     try {
-      const { data } = await user.findAll({ pageSize, page: currentPage })
+      const queryString = {
+        pageSize,
+        page: params.page,
+        searchType: params.searchType ?? '',
+        keyword: params.searchKeyword ?? '',
+      }
+      const { data } = await user.findAll(queryString)
 
       setItems(
         data.items.map((item, index) => ({
@@ -56,7 +74,7 @@ const Partner = () => {
               이동
             </CButton>
           ),
-          sno: (currentPage - 1) * pageSize + index + 1,
+          sno: (page - 1) * pageSize + index + 1,
           userType: item.userType,
           id: item.id,
           userName: item.userName,
@@ -71,11 +89,47 @@ const Partner = () => {
   }
 
   useEffect(() => {
-    fetchData(page)
+    const param = {
+      page,
+      searchType,
+      searchKeyword,
+    }
+    fetchData(param)
   }, [page])
 
+  const handleSearch = () => {
+    fetchData({ searchType, searchKeyword }) // 검색 실행
+  }
+
   return (
-    <div>
+    <>
+      <CInputGroup>
+        <CFormSelect
+          aria-label="Default select example"
+          options={[
+            { label: '선택', value: '', disabled: true },
+            { label: 'ID', value: 'id' },
+            { label: '업체명', value: 'userName' },
+          ]}
+          value={searchType}
+          onChange={(e) => setSearchType(e.target.value)}
+        />
+        <CFormInput
+          placeholder="검색어를 입력해주세요."
+          aria-label="Text input with 2 dropdown buttons"
+          value={searchKeyword}
+          onChange={(e) => setSearchKeyword(e.target.value)}
+        />
+        <CButton
+          type="button"
+          color="secondary"
+          variant="outline"
+          id="button-addon2"
+          onClick={handleSearch}
+        >
+          <CIcon icon={cilSearch} />
+        </CButton>
+      </CInputGroup>
       <CTable striped columns={columns} items={items} />
       <CPagination align="center">
         <CPaginationItem
@@ -98,7 +152,7 @@ const Partner = () => {
           다음
         </CPaginationItem>
       </CPagination>
-    </div>
+    </>
   )
 }
 export default Partner

@@ -18,36 +18,43 @@ const Partner = () => {
       key: 'details',
       label: '상세보기',
       _props: { scope: 'col' },
+      _style: { width: '8%' },
     },
     {
       key: 'sno',
       label: '번호',
       _props: { scope: 'col' },
+      _style: { width: '6%' },
     },
     {
       key: 'userType',
       label: '관리자 타입',
       _props: { scope: 'col' },
+      _style: { width: '10%' },
     },
     {
       key: 'id',
       label: '아이디',
       _props: { scope: 'col' },
+      _style: { width: '16%' },
     },
     {
       key: 'userName',
-      label: '이름',
+      label: '업체명',
       _props: { scope: 'col' },
+      _style: { width: '20%' },
     },
     {
       key: 'userTel',
       label: '전화번호',
       _props: { scope: 'col' },
+      _style: { width: '20%' },
     },
     {
       key: 'userEmail',
       label: '이메일',
       _props: { scope: 'col' },
+      _style: { width: '20%' },
     },
   ]
   const [items, setItems] = useState([])
@@ -105,6 +112,7 @@ const Partner = () => {
     <>
       <CInputGroup>
         <CFormSelect
+          className="col-sm-10"
           aria-label="Default select example"
           options={[
             { label: '선택', value: '', disabled: true },
@@ -133,7 +141,7 @@ const Partner = () => {
           <CIcon icon={cilSearch} />
         </CButton>
       </CInputGroup>
-      <CTable striped columns={columns} items={items} />
+      <CTable className='text-center' striped columns={columns} items={items} />
       <CPagination align="center">
         <CPaginationItem
           disabled={page === 1}

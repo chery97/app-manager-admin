@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { CButton, CCol, CForm, CFormInput, CFormSelect, CRow } from '@coreui/react'
+import { useParams } from 'react-router-dom'
+import user from 'src/api/user'
 
 const PartnerRegister = () => {
+  const { sno } = useParams()
   const [userData, setUserData] = useState({
     id: 'exampleId',
     userName: '테스트',
@@ -10,15 +13,17 @@ const PartnerRegister = () => {
     partnerSno: '888',
     userEmail: 'test@example.com',
   })
-  const fetchData = async (params) => {
+  const fetchData = async (sno) => {
     try {
+      const { data } = await user.findOne(sno)
+      // setUserData(data)
     } catch (error) {
       console.error('error:', error)
     }
   }
   useEffect(() => {
-    // fetchData(params)
-  }, [])
+    // fetchData(sno)
+  }, [sno])
 
   const handleChange = (e) => {
     const { id, value } = e.target

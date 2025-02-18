@@ -16,6 +16,12 @@ const user = {
       url: `/users?${queryString}`,
     })
   },
+  findOne: (sno) => {
+    return authRequest({
+      method: 'GET',
+      url: `/user/${sno}`,
+    })
+  },
 }
 
 export default user

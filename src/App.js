@@ -1,7 +1,6 @@
 import React, { Suspense, useEffect, useState } from 'react'
 import { HashRouter, Route, Routes, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-
 import {
   CButton,
   CModal,
@@ -14,6 +13,7 @@ import {
 } from '@coreui/react'
 import './scss/style.scss'
 
+import LoginExpiredModal from 'src/components/common/modal/LoginExpiredModal'
 // We use those styles to show code examples, you should remove them in your application.
 import './scss/examples.scss'
 
@@ -70,6 +70,10 @@ const ProtectedRoute = () => {
   const [showModal, setShowModal] = useState(false)
   const navigate = useNavigate()
 
+  const onCloseModal = () => {
+    navigate('/login', { replace: true })
+  }
+
   useEffect(() => {
     const token = localStorage.getItem('GEEK_SSID')
     if (!token) {
@@ -81,19 +85,7 @@ const ProtectedRoute = () => {
     <>
       <DefaultLayout />
       {/*토큰값이 없는 경우 모달 알럿 노출*/}
-      {showModal && (
-        <CModal visible={showModal} onClose={() => navigate('/login')}>
-          <CModalHeader>
-            <CModalTitle>로그인이 필요합니다</CModalTitle>
-          </CModalHeader>
-          <CModalBody>로그인 상태가 만료되었습니다. 다시 로그인해주세요.</CModalBody>
-          <CModalFooter>
-            <CButton color="secondary" onClick={() => navigate('/login')}>
-              로그인 페이지로 이동
-            </CButton>
-          </CModalFooter>
-        </CModal>
-      )}
+      {showModal && <LoginExpiredModal isVisible={showModal} onClose={onCloseModal} />}
     </>
   )
 }

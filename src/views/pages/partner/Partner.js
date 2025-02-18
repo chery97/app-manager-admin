@@ -119,6 +119,9 @@ const Partner = () => {
           aria-label="Text input with 2 dropdown buttons"
           value={searchKeyword}
           onChange={(e) => setSearchKeyword(e.target.value)}
+          onKeyUp={(e) => {
+            if (e.keyCode === 13) handleSearch()
+          }}
         />
         <CButton
           type="button"

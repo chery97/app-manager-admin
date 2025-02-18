@@ -15,12 +15,6 @@ import { cilSearch } from '@coreui/icons'
 const Partner = () => {
   const columns = [
     {
-      key: 'details',
-      label: '상세보기',
-      _props: { scope: 'col' },
-      _style: { width: '8%' },
-    },
-    {
       key: 'sno',
       label: '번호',
       _props: { scope: 'col' },
@@ -55,6 +49,12 @@ const Partner = () => {
       label: '이메일',
       _props: { scope: 'col' },
       _style: { width: '20%' },
+    },
+    {
+      key: 'details',
+      label: '상세보기',
+      _props: { scope: 'col' },
+      _style: { width: '8%' },
     },
   ]
   const [items, setItems] = useState([])
@@ -110,9 +110,9 @@ const Partner = () => {
 
   return (
     <>
-      <CInputGroup>
+      <CInputGroup className="mb-5 mt-3">
         <CFormSelect
-          className="col-sm-10"
+          style={{ width: '10%' }}
           aria-label="Default select example"
           options={[
             { label: '선택', value: '', disabled: true },
@@ -123,6 +123,7 @@ const Partner = () => {
           onChange={(e) => setSearchType(e.target.value)}
         />
         <CFormInput
+          style={{ width: '75%' }}
           placeholder="검색어를 입력해주세요."
           aria-label="Text input with 2 dropdown buttons"
           value={searchKeyword}
@@ -136,6 +137,7 @@ const Partner = () => {
           color="secondary"
           variant="outline"
           id="button-addon2"
+          style={{ width: '5%' }}
           onClick={handleSearch}
         >
           <CIcon icon={cilSearch} />

@@ -10,18 +10,17 @@ import {
   CHeader,
   CHeaderNav,
   CHeaderToggler,
-  CNavItem,
-  CNavLink,
   useColorModes,
 } from '@coreui/react'
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { NavLink } from 'react-router-dom'
+import { useNavigate} from 'react-router-dom'
 
 import { AppHeaderDropdown } from './header/index'
 import { AppBreadcrumb } from './index'
 
 const AppHeader = () => {
+  const navigate = useNavigate()
   const headerRef = useRef()
   const { colorMode, setColorMode } = useColorModes('coreui-free-react-admin-template-theme')
 
@@ -35,6 +34,12 @@ const AppHeader = () => {
     })
   }, [])
 
+  const goLogout = () => {
+    localStorage.removeItem('GEEK_SSID')
+    localStorage.removeItem('GEEK_SSRID')
+    navigate('/login', { replace: true })
+  }
+
   return (
     <CHeader position="sticky" className="mb-4 p-0" ref={headerRef}>
       <CContainer className="border-bottom px-4" fluid>
@@ -44,19 +49,7 @@ const AppHeader = () => {
         >
           <CIcon icon={cilMenu} size="lg" />
         </CHeaderToggler>
-        <CHeaderNav className="d-none d-md-flex">
-          <CNavItem>
-            <CNavLink to="/dashboard" as={NavLink}>
-              Dashboard
-            </CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">Users</CNavLink>
-          </CNavItem>
-          <CNavItem>
-            <CNavLink href="#">Settings</CNavLink>
-          </CNavItem>
-        </CHeaderNav>
+        <CHeaderNav className="d-none d-md-flex"></CHeaderNav>
         <CHeaderNav className="ms-auto" />
         <CHeaderNav className="d-flex align-items-center gap-3">
           <CDropdown
@@ -110,7 +103,7 @@ const AppHeader = () => {
             style={{
               border: 'none',
             }}
-            onClick={() => alert('로그아웃')}
+            onClick={goLogout}
           >
             <span>로그아웃</span>
           </CButton>

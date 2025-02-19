@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+
 import {
   CButton,
   CCard,
@@ -20,34 +22,37 @@ import user from 'src/api/user'
 
 const PartnerRegister = () => {
   const { sno } = useParams()
-  const [userData, setUserData] = useState({
-    id: 'exampleId',
-    userName: '테스트',
-    userTel: '010-9876-5432',
-    managerType: 'partner',
-    partnerSno: '888',
-    userEmail: 'test@example.com',
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      id: 'exampleId',
+      userName: '테스트',
+      userTel: '010-9876-5432',
+      managerType: 'partner',
+      partnerSno: '888',
+      userEmail: 'test@example.com',
+    },
   })
-  const fetchData = async (sno) => {
-    try {
-      const { data } = await user.findOne(sno)
-      // setUserData(data)
-    } catch (error) {
-      console.error('error:', error)
-    }
-  }
   useEffect(() => {
+    const fetchData = async (sno) => {
+      try {
+        const { data } = await user.findOne(sno)
+        // Object.keys(data).forEach((key) => setValue(key, data[key]))
+      } catch (error) {
+        console.error('error:', error)
+      }
+    }
     // fetchData(sno)
   }, [sno])
 
-  const handleChange = (e) => {
-    const { id, value } = e.target
-    setUserData((prevData) => ({
-      ...prevData,
-      [id]: value,
-    }))
+  const onSubmit = (data) => {
+    console.log('제출 데이터:', data)
   }
-  const handleSubmit = async (e) => {}
 
   return (
     <CCard className="mb-4">
@@ -64,15 +69,14 @@ const PartnerRegister = () => {
           <CTabContent>
             <CTabPanel className="p-3" itemKey="detail">
               <CCardBody>
-                <CForm className="row g-3" onSubmit={handleSubmit}>
+                <CForm className="row g-3" onSubmit={handleSubmit(onSubmit)}>
                   <CCol className="bg-dark p-3">
                     <CRow>
                       <CCol>
                         <CFormInput
                           type="email"
-                          id="id"
                           label="아이디"
-                          value={userData.id}
+                          {...register('id')}
                           style={{ width: '100%' }}
                           readOnly
                         />
@@ -80,32 +84,28 @@ const PartnerRegister = () => {
                       <CCol>
                         <CFormInput
                           type="text"
-                          id="userName"
                           label="이름"
-                          value={userData.userName}
+                          {...register('userName', { required: '이름을 입력하세요' })}
                           style={{ width: '100%' }}
-                          onChange={handleChange}
                         />
+                        {errors.userName && <p>{errors.userName.message}</p>}
                       </CCol>
                       <CCol>
                         <CFormInput
-                          id="userTel"
                           label="연락처"
-                          value={userData.userTel}
+                          {...register('userTel', { required: '연락처를 입력하세요' })}
                           placeholder="01012345678"
                           style={{ width: '100%' }}
-                          onChange={handleChange}
                         />
+                        {errors.userTel && <p>{errors.userTel.message}</p>}
                       </CCol>
                     </CRow>
                     <CRow className="mb-3">
                       <CCol>
                         <CFormSelect
-                          id="managerType"
                           label="타입"
-                          value={userData.managerType}
+                          {...register('managerType')}
                           style={{ width: '100%' }}
-                          onChange={handleChange}
                           readOnly
                         >
                           <option value="partner">파트너</option>
@@ -114,25 +114,22 @@ const PartnerRegister = () => {
                       </CCol>
                       <CCol>
                         <CFormInput
-                          id="partnerSno"
                           label="파트너명"
-                          value={userData.partnerSno}
+                          {...register('partnerSno')}
                           placeholder="input PartnerManagement's Name"
                           style={{ width: '100%' }}
-                          onChange={handleChange}
                         />
                       </CCol>
                     </CRow>
                     <CRow className="mb-3">
                       <CCol>
                         <CFormInput
-                          id="userEmail"
                           label="이메일"
-                          value={userData.userEmail}
+                          {...register('userEmail', { required: '이메일을 입력하세요' })}
                           placeholder="test@domain.com"
                           style={{ width: '100%' }}
-                          onChange={handleChange}
                         />
+                        {errors.userEmail && <p>{errors.userEmail.message}</p>}
                       </CCol>
                     </CRow>
                   </CCol>
@@ -149,15 +146,13 @@ const PartnerRegister = () => {
             </CTabPanel>
             <CTabPanel className="p-3" itemKey="app">
               <CCardBody>
-                <CForm className="row g-3" onSubmit={handleSubmit}>
+                <CForm className="row g-3" onSubmit={handleSubmit(onSubmit)}>
                   <CCol className="bg-dark p-3">
                     <CRow>
                       <CCol>
                         <CFormInput
-                          type="email"
-                          id="id"
                           label="아이디"
-                          value={userData.id}
+                          {...register('id')}
                           style={{ width: '100%' }}
                           readOnly
                         />
@@ -165,21 +160,17 @@ const PartnerRegister = () => {
                       <CCol>
                         <CFormInput
                           type="text"
-                          id="userName"
                           label="이름"
-                          value={userData.userName}
+                          {...register('userName')}
                           style={{ width: '100%' }}
-                          onChange={handleChange}
                         />
                       </CCol>
                       <CCol>
                         <CFormInput
-                          id="userTel"
                           label="연락처"
-                          value={userData.userTel}
+                          {...register('userTel')}
                           placeholder="01012345678"
                           style={{ width: '100%' }}
-                          onChange={handleChange}
                         />
                       </CCol>
                     </CRow>

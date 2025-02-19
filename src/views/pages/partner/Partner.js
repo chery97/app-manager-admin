@@ -7,10 +7,15 @@ import {
   CInputGroup,
   CFormInput,
   CFormSelect,
+  CNavLink,
+  CCard,
+  CCardHeader,
+  CCardBody,
 } from '@coreui/react'
 import user from 'src/api/user'
 import CIcon from '@coreui/icons-react'
 import { cilSearch } from '@coreui/icons'
+import { NavLink } from 'react-router-dom'
 
 const Partner = () => {
   const columns = [
@@ -109,63 +114,73 @@ const Partner = () => {
   }
 
   return (
-    <>
-      <CInputGroup className="mb-5 mt-3">
-        <CFormSelect
-          style={{ width: '10%' }}
-          aria-label="Default select example"
-          options={[
-            { label: '선택', value: '', disabled: true },
-            { label: 'ID', value: 'id' },
-            { label: '업체명', value: 'userName' },
-          ]}
-          value={searchType}
-          onChange={(e) => setSearchType(e.target.value)}
-        />
-        <CFormInput
-          style={{ width: '75%' }}
-          placeholder="검색어를 입력해주세요."
-          aria-label="Text input with 2 dropdown buttons"
-          value={searchKeyword}
-          onChange={(e) => setSearchKeyword(e.target.value)}
-          onKeyUp={(e) => {
-            if (e.keyCode === 13) handleSearch()
-          }}
-        />
-        <CButton
-          type="button"
-          color="secondary"
-          variant="outline"
-          id="button-addon2"
-          style={{ width: '5%' }}
-          onClick={handleSearch}
-        >
-          <CIcon icon={cilSearch} />
+    <CCard className="mb-4">
+      <CCardHeader className="d-flex align-items-center">
+        <strong>파트너 관리</strong>
+        <CButton type="button" color="primary" className="ms-auto">
+          <CNavLink to="/partner/register" as={NavLink}>
+            파트너 등록
+          </CNavLink>
         </CButton>
-      </CInputGroup>
-      <CTable className='text-center' striped columns={columns} items={items} />
-      <CPagination align="center">
-        <CPaginationItem
-          disabled={page === 1}
-          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-        >
-          이전
-        </CPaginationItem>
-
-        {[...Array(totalPages)].map((_, i) => (
-          <CPaginationItem key={i} active={i + 1 === page} onClick={() => setPage(i + 1)}>
-            {i + 1}
+      </CCardHeader>
+      <CCardBody>
+        <CInputGroup className="mb-5 mt-3">
+          <CFormSelect
+            style={{ width: '10%' }}
+            aria-label="Default select example"
+            options={[
+              { label: '선택', value: '', disabled: true },
+              { label: 'ID', value: 'id' },
+              { label: '업체명', value: 'userName' },
+            ]}
+            value={searchType}
+            onChange={(e) => setSearchType(e.target.value)}
+          />
+          <CFormInput
+            style={{ width: '75%' }}
+            placeholder="검색어를 입력해주세요."
+            aria-label="Text input with 2 dropdown buttons"
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            onKeyUp={(e) => {
+              if (e.keyCode === 13) handleSearch()
+            }}
+          />
+          <CButton
+            type="button"
+            color="secondary"
+            variant="outline"
+            id="button-addon2"
+            style={{ width: '5%' }}
+            onClick={handleSearch}
+          >
+            <CIcon icon={cilSearch} />
+          </CButton>
+        </CInputGroup>
+        <CTable className="text-center" striped columns={columns} items={items} />
+        <CPagination align="center">
+          <CPaginationItem
+            disabled={page === 1}
+            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+          >
+            이전
           </CPaginationItem>
-        ))}
 
-        <CPaginationItem
-          disabled={page === totalPages}
-          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-        >
-          다음
-        </CPaginationItem>
-      </CPagination>
-    </>
+          {[...Array(totalPages)].map((_, i) => (
+            <CPaginationItem key={i} active={i + 1 === page} onClick={() => setPage(i + 1)}>
+              {i + 1}
+            </CPaginationItem>
+          ))}
+
+          <CPaginationItem
+            disabled={page === totalPages}
+            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+          >
+            다음
+          </CPaginationItem>
+        </CPagination>
+      </CCardBody>
+    </CCard>
   )
 }
 export default Partner

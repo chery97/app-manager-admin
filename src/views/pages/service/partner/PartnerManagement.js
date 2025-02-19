@@ -81,17 +81,17 @@ const PartnerManagement = () => {
 
       setItems(
         data.items.map((item, index) => ({
-          details: (
-            <CButton color="light" size="sm" href={`#/partner/${item.sno}`}>
-              이동
-            </CButton>
-          ),
           sno: (page - 1) * pageSize + index + 1,
           userType: item.userType,
           id: item.id,
           userName: item.userName,
           userTel: item.userTel,
           userEmail: item.userEmail,
+          details: (
+            <CButton color="light" size="sm" href={`#/service/partner/${item.sno}`}>
+              이동
+            </CButton>
+          ),
         })),
       )
       setTotalPages(data.totalPage)

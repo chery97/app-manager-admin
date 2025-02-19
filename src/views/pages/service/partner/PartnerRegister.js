@@ -52,17 +52,17 @@ const PartnerRegister = () => {
   return (
     <CCard className="mb-4">
       <CCardHeader className="d-flex align-items-center">
-        <CTabs activeItemKey="profile">
+        <CTabs activeItemKey="detail">
           <CTabList variant="tabs">
-            <CTab itemKey="home">
+            <CTab itemKey="detail">
               <strong>파트너 등록</strong>
             </CTab>
-            <CTab itemKey="profile">
+            <CTab itemKey="app">
               <strong>앱 관리</strong>
             </CTab>
           </CTabList>
           <CTabContent>
-            <CTabPanel className="p-3" itemKey="home">
+            <CTabPanel className="p-3" itemKey="detail">
               <CCardBody>
                 <CForm className="row g-3" onSubmit={handleSubmit}>
                   <CCol className="bg-dark p-3">
@@ -147,7 +147,7 @@ const PartnerRegister = () => {
                 </CForm>
               </CCardBody>
             </CTabPanel>
-            <CTabPanel className="p-3" itemKey="profile">
+            <CTabPanel className="p-3" itemKey="app">
               <CCardBody>
                 <CForm className="row g-3" onSubmit={handleSubmit}>
                   <CCol className="bg-dark p-3">

@@ -11,6 +11,7 @@ import {
   CCard,
   CCardHeader,
   CCardBody,
+  CCardFooter,
 } from '@coreui/react'
 import user from 'src/api/user'
 import CIcon from '@coreui/icons-react'
@@ -117,14 +118,9 @@ const PartnerManagement = () => {
     <CCard className="mb-4">
       <CCardHeader className="d-flex align-items-center">
         <strong>파트너 관리</strong>
-        <CButton type="button" color="primary" className="ms-auto">
-          <CNavLink to="/service/partner/register" as={NavLink}>
-            파트너 등록
-          </CNavLink>
-        </CButton>
       </CCardHeader>
       <CCardBody>
-        <CInputGroup className="mb-5 mt-3">
+        <CInputGroup className="mb-2 mt-3">
           <CFormSelect
             style={{ width: '10%' }}
             aria-label="Default select example"
@@ -158,7 +154,7 @@ const PartnerManagement = () => {
           </CButton>
         </CInputGroup>
         <CTable className="text-center" striped columns={columns} items={items} />
-        <CPagination align="center">
+        <CPagination align="center" className="m-0">
           <CPaginationItem
             disabled={page === 1}
             onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
@@ -180,6 +176,13 @@ const PartnerManagement = () => {
           </CPaginationItem>
         </CPagination>
       </CCardBody>
+      <CCardFooter className="text-end">
+        <CButton type="button" color="primary">
+          <CNavLink to="/service/partner/register" as={NavLink}>
+            파트너 등록
+          </CNavLink>
+        </CButton>
+      </CCardFooter>
     </CCard>
   )
 }

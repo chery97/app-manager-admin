@@ -1,8 +1,8 @@
 const PATHS = {
   SERVICE: {
     ADMIN: '/service/admin',
-    PARTNER: '/partner',
-    APPLICATION: '/service/application',
+    PARTNER: '/service/partner',
+    APPLICATION: '/service/app',
   },
   APPLICATION: {
     APP_PUSH: {

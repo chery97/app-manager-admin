@@ -17,7 +17,7 @@ import CIcon from '@coreui/icons-react'
 import { cilSearch } from '@coreui/icons'
 import { NavLink } from 'react-router-dom'
 
-const Partner = () => {
+const PartnerManagement = () => {
   const columns = [
     {
       key: 'sno',
@@ -118,7 +118,7 @@ const Partner = () => {
       <CCardHeader className="d-flex align-items-center">
         <strong>파트너 관리</strong>
         <CButton type="button" color="primary" className="ms-auto">
-          <CNavLink to="/partner/register" as={NavLink}>
+          <CNavLink to="/service/partner/register" as={NavLink}>
             파트너 등록
           </CNavLink>
         </CButton>
@@ -183,4 +183,4 @@ const Partner = () => {
     </CCard>
   )
 }
-export default Partner
+export default PartnerManagement

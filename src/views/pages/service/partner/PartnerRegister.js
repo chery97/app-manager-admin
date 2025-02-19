@@ -7,9 +7,13 @@ import {
   CCol,
   CForm,
   CFormInput,
-  CFormSelect, CNav,
-  CNavItem, CNavLink,
-  CRow, CTab, CTabContent, CTabList, CTabPanel, CTabs
+  CFormSelect,
+  CRow,
+  CTab,
+  CTabContent,
+  CTabList,
+  CTabPanel,
+  CTabs,
 } from '@coreui/react'
 import { useParams } from 'react-router-dom'
 import user from 'src/api/user'
@@ -113,7 +117,7 @@ const PartnerRegister = () => {
                           id="partnerSno"
                           label="파트너명"
                           value={userData.partnerSno}
-                          placeholder="input Partner's Name"
+                          placeholder="input PartnerManagement's Name"
                           style={{ width: '100%' }}
                           onChange={handleChange}
                         />

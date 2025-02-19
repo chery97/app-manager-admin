@@ -128,7 +128,7 @@ coreui-free-react-admin-template
 │   ├── scss/        # scss styles
 │   ├── views/       # application views
 │   ├── _nav.js      # sidebar navigation config
-│   ├── App.js
+│   ├── AppManagement.js
 │   ├── index.js
 │   ├── routes.js    # routes config
 │   └── store.js     # template state example 

@@ -53,10 +53,15 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
 // Geek Pages
 const Login = React.lazy(() => import('./views/pages/login/Login'))
+
+// service
 const Partner = React.lazy(() => import('./views/pages/service/partner/PartnerManagement'))
 const PartnerRegister = React.lazy(() => import('./views/pages/service/partner/PartnerRegister'))
 const App = React.lazy(() => import('./views/pages/service/app/AppManagement'))
 const AppRegister = React.lazy(() => import('./views/pages/service/app/AppRegister'))
+
+// app
+const Send = React.lazy(() => import('./views/pages/app/push/Send'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -106,10 +111,15 @@ const routes = [
   { path: '/widgets', name: 'Widgets', element: Widgets },
   // geek custom
   { path: '/login', name: 'Login', element: Login },
+
+  // service
   { path: '/service/partner', name: 'Partner', element: Partner },
   { path: '/service/partner/:sno', name: 'Partner Detail', element: PartnerRegister },
   { path: '/service/app', name: 'App', element: App },
   { path: '/service/app/register', name: 'app register', element: AppRegister },
+
+  // app
+  { path: '/app/push/send', name: 'app push send', element: Send },
 ]
 
 export default routes

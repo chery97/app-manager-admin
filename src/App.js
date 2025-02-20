@@ -16,6 +16,7 @@ import './scss/style.scss'
 import LoginExpiredModal from 'src/components/common/modal/LoginExpiredModal'
 // We use those styles to show code examples, you should remove them in your application.
 import './scss/examples.scss'
+import { DialogProvider } from 'src/context/Dialogcontext'
 
 // Containers
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
@@ -83,7 +84,10 @@ const ProtectedRoute = () => {
 
   return (
     <>
-      <DefaultLayout />
+      <DialogProvider>
+        <DefaultLayout />
+      </DialogProvider>
+
       {/*토큰값이 없는 경우 모달 알럿 노출*/}
       {showModal && <LoginExpiredModal isVisible={showModal} onClose={onCloseModal} />}
     </>

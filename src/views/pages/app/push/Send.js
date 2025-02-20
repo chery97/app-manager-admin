@@ -12,11 +12,6 @@ import {
   CFormLabel,
   CFormTextarea,
   CInputGroup,
-  CModal,
-  CModalBody,
-  CModalFooter,
-  CModalHeader,
-  CModalTitle,
   CRow,
 } from '@coreui/react'
 import React, { useState } from 'react'
@@ -25,6 +20,7 @@ import { useMutation } from '@tanstack/react-query'
 import push from 'src/api/push'
 import { useDialog } from 'src/context/Dialogcontext'
 import { useNavigate } from 'react-router-dom'
+import MemberSearch from 'src/components/common/modal/MemberSearchForm'
 
 const Send = () => {
   const [selectedTarget, setSelectedTarget] = useState('전체')
@@ -40,13 +36,10 @@ const Send = () => {
   const { confirm } = useDialog()
 
   const handleModal = async (data) => {
-    const result = await confirm({
+    return await confirm({
       message: data.message,
       buttons: [{ label: '확인', value: true, color: 'primary' }],
     })
-    if (result) {
-      navigate(0) // 현재 경로 다시 로드
-    }
   }
 
   const FnPushSend = async (pushData) => {
@@ -57,10 +50,16 @@ const Send = () => {
   const pushSendMutation = useMutation({
     mutationFn: FnPushSend,
     onSuccess: async (data) => {
-      await handleModal(data) // 모달 띄운 후 새로고침
+      const result = await handleModal(data) // 모달 띄운 후 새로고침
+      if (result) {
+        navigate(0) // 현재 경로 다시 로드
+      }
     },
     onError: async (error) => {
-      await handleModal(error?.response?.data) // 모달 띄운 후 새로고침
+      const result = await handleModal(error?.response?.data) // 모달 띄운 후 새로고침
+      if (result) {
+        navigate(0) // 현재 경로 다시 로드
+      }
     },
   })
 
@@ -72,6 +71,15 @@ const Send = () => {
       message: data.pushContents,
     }
     pushSendMutation.mutate(testData)
+  }
+
+  const handleMemberSearchModal = async () => {
+    return await confirm({
+      title: '회원 선택',
+      message: <MemberSearch />,
+      buttons: [{ label: '확인', value: true, color: 'primary' }],
+      size: 'large',
+    })
   }
 
   return (
@@ -100,66 +108,124 @@ const Send = () => {
                   <CFormLabel className="mb-0">발송 목적</CFormLabel>
                 </CCol>
                 <CCol md={10}>
-                  <CFormCheck inline type="radio" label="광고성" name="purpose" defaultChecked />
-                  <CFormCheck inline type="radio" label="정보성" name="purpose" />
+                  <CFormCheck
+                    inline
+                    type="radio"
+                    label={<label htmlFor="ad">광고성</label>}
+                    id="ad"
+                    name="purpose"
+                    defaultChecked
+                  />
+                  <CFormCheck
+                    inline
+                    type="radio"
+                    label={<label htmlFor="info">정보성</label>}
+                    id="info"
+                    name="purpose"
+                  />
                 </CCol>
               </CRow>
-              <CRow className="align-items-center border-bottom border-light-subtle">
-                <CCol md={2} className="bg-light p-2">
+              <CRow className="align-items-stretch border-bottom border-light-subtle">
+                <CCol md={2} className="d-flex align-items-center p-2 bg-light">
                   <CFormLabel className="text-danger mb-0">* 수신 대상</CFormLabel>
                 </CCol>
-                <CCol md={10}>
-                  <CFormCheck
-                    inline
-                    type="radio"
-                    label="전체"
-                    name="target"
-                    checked={selectedTarget === '전체'}
-                    onChange={() => setSelectedTarget('전체')}
-                  />
-                  <CFormCheck
-                    inline
-                    type="radio"
-                    label="회원 선택"
-                    name="target"
-                    checked={selectedTarget === '회원 선택'}
-                    onChange={() => setSelectedTarget('회원 선택')}
-                  />
-                  <CFormCheck
-                    inline
-                    type="radio"
-                    label="그룹 선택"
-                    name="target"
-                    checked={selectedTarget === '그룹 선택'}
-                    onChange={() => setSelectedTarget('그룹 선택')}
-                  />
-                  <span className="ms-2 text-primary">회원 총 {totalMembers}명 선택</span>
+                <CCol md={10} className="d-flex align-items-center flex-wrap">
+                  <div className="d-flex align-items-center gap-3">
+                    <CFormCheck
+                      inline
+                      type="radio"
+                      label={<label htmlFor="all">전체</label>}
+                      name="target"
+                      id="all"
+                      checked={selectedTarget === '전체'}
+                      onChange={() => setSelectedTarget('전체')}
+                    />
+                    <CFormCheck
+                      inline
+                      type="radio"
+                      label={<label htmlFor="member">회원 선택</label>}
+                      name="target"
+                      id="member"
+                      checked={selectedTarget === '회원 선택'}
+                      onChange={() => setSelectedTarget('회원 선택')}
+                    />
+                    <CFormCheck
+                      inline
+                      type="radio"
+                      label={<label htmlFor="group">그룹 선택</label>}
+                      name="target"
+                      id="group"
+                      checked={selectedTarget === '그룹 선택'}
+                      onChange={() => setSelectedTarget('그룹 선택')}
+                    />
+                    <span className="ms-2 text-primary">회원 총 {totalMembers}명 선택</span>
+                  </div>
+                  {/* 🔥 회원 선택 시 버튼 노출 */}
+                  {selectedTarget === '회원 선택' && (
+                    <div className="mt-2 w-100">
+                      <CButton color="primary" onClick={handleMemberSearchModal}>
+                        회원 선택
+                      </CButton>
+                    </div>
+                  )}
                 </CCol>
               </CRow>
               <CRow className="align-items-center border-bottom border-light-subtle">
-                <CCol md={2} className="bg-light p-2">
+                <CCol md={2} className="p-2 bg-light">
                   <CFormLabel>발송 OS</CFormLabel>
                 </CCol>
                 <CCol md={10}>
-                  <CFormCheck inline type="radio" label="전체" name="os" defaultChecked />
-                  <CFormCheck inline type="radio" label="Android" name="os" />
-                  <CFormCheck inline type="radio" label="iOS" name="os" />
+                  <CFormCheck
+                    inline
+                    type="radio"
+                    label={<label htmlFor="allOs">전체</label>}
+                    id="allOs"
+                    name="os"
+                    defaultChecked
+                  />
+                  <CFormCheck
+                    inline
+                    type="radio"
+                    label={<label htmlFor="android">Android</label>}
+                    id="android"
+                    name="os"
+                  />
+                  <CFormCheck
+                    inline
+                    type="radio"
+                    label={<label htmlFor="ios">IOS</label>}
+                    id="ios"
+                    name="os"
+                  />
                 </CCol>
               </CRow>
               <CRow className="align-items-center">
-                <CCol md={2} className="bg-light p-2">
+                <CCol md={2} className="p-2 bg-light">
                   <CFormLabel>발송 유형</CFormLabel>
                 </CCol>
                 <CCol md={10}>
                   <CFormCheck
                     inline
                     type="radio"
-                    label="즉시 발송"
+                    label={<label htmlFor="immediately">즉시 발송</label>}
+                    id="immediately"
                     name="sendType"
                     defaultChecked
                   />
-                  <CFormCheck inline type="radio" label="예약 발송" name="sendType" />
-                  <CFormCheck inline type="radio" label="반복 발송" name="sendType" />
+                  <CFormCheck
+                    inline
+                    type="radio"
+                    label={<label htmlFor="reserve">예약 발송</label>}
+                    id="reserve"
+                    name="sendType"
+                  />
+                  <CFormCheck
+                    inline
+                    type="radio"
+                    label={<label htmlFor="batch">반복 발송</label>}
+                    id="batch"
+                    name="sendType"
+                  />
                 </CCol>
               </CRow>
             </CContainer>
@@ -190,7 +256,7 @@ const Send = () => {
                   />
                 </CCol>
               </CRow>
-              <CRow className="align-items-center border-bottom border-light-subtle">
+              <CRow className="align-items-stretch border-bottom border-light-subtle">
                 <CCol
                   md={2}
                   className="d-flex align-items-center bg-light p-4"
@@ -198,7 +264,7 @@ const Send = () => {
                 >
                   <CFormLabel className="text-danger">* 푸시 내용</CFormLabel>
                 </CCol>
-                <CCol md={10}>
+                <CCol md={10} className="d-flex align-items-center flex-wrap">
                   <CFormTextarea
                     className="my-2"
                     placeholder="요즘 핫한 파인다이닝"

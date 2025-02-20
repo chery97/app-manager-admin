@@ -1,1 +1,8 @@
 // Here you can add other styles
+.custom-modal-size .modal-dialog {
+  max-width: 500px !important;
+}
+
+.custom-modal-size.large .modal-dialog {
+  max-width: 55vw !important;
+}

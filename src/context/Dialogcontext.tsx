@@ -1,11 +1,13 @@
 import React, { createContext, useContext, useState } from 'react'
 import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CButton } from '@coreui/react'
+import modal from '@/components/common/modal'
 
 // confirm 파라미터 타입
 type ConfirmOptions = {
   title?: string
   message: string | React.ReactNode // JSX 요소도 받을 수 있도록 변경
   buttons: { label: string; value: any; color?: string }[]
+  size?: 'small' | 'large'
 }
 
 // DialogContext 타입 정의
@@ -45,7 +47,13 @@ export const DialogProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       {children}
 
       {/* CoreUI 모달 적용 */}
-      <CModal visible={isVisible} onClose={() => handleAction(null)}>
+      <CModal
+        visible={!!modalData}
+        onClose={() => handleAction(null)}
+        backdrop={true} // ✅ 바깥 클릭하면 닫히도록 설정
+        alignment="center"
+        className={`custom-modal-size ${modalData?.size === 'large' ? 'large' : 'small'}`}
+      >
         {modalData && (
           <>
             <CModalHeader>

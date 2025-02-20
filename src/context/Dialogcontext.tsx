@@ -4,7 +4,7 @@ import { CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CButton } 
 // confirm 파라미터 타입
 type ConfirmOptions = {
   title?: string
-  message: string
+  message: string | React.ReactNode // JSX 요소도 받을 수 있도록 변경
   buttons: { label: string; value: any; color?: string }[]
 }
 
@@ -22,17 +22,22 @@ const DialogContext = createContext<DialogContextType>({
 export const DialogProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [modalData, setModalData] = useState<ConfirmOptions | null>(null)
   const [resolveFn, setResolveFn] = useState<((value: any) => void) | null>(null)
+  const [isVisible, setIsVisible] = useState(false) // 애니메이션을 위한 상태 추가
 
   const confirm = (options: ConfirmOptions): Promise<any> => {
     return new Promise((resolve) => {
       setModalData(options)
       setResolveFn(() => resolve)
+      setIsVisible(true) // 모달 열기 (애니메이션 적용)
     })
   }
 
   const handleAction = (result: any) => {
-    if (resolveFn) resolveFn(result)
-    setModalData(null)
+    setIsVisible(false) // `visible`을 false로 변경하여 애니메이션 적용
+    setTimeout(() => {
+      if (resolveFn) resolveFn(result)
+      setModalData(null) // 애니메이션 후 모달 데이터 초기화
+    }, 300) // CoreUI 기본 애니메이션 시간 (0.3s)
   }
 
   return (
@@ -40,7 +45,7 @@ export const DialogProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       {children}
 
       {/* CoreUI 모달 적용 */}
-      <CModal visible={!!modalData} onClose={() => handleAction(null)}>
+      <CModal visible={isVisible} onClose={() => handleAction(null)}>
         {modalData && (
           <>
             <CModalHeader>

@@ -28,30 +28,24 @@ const PartnerRegister = () => {
     setValue,
     watch,
     formState: { errors },
-  } = useForm({
-    defaultValues: {
-      id: 'exampleId',
-      userName: '테스트',
-      userTel: '010-9876-5432',
-      managerType: 'partner',
-      partnerSno: '888',
-      userEmail: 'test@example.com',
-    },
-  })
+  } = useForm()
+
+  const userType = watch('userType')
+
   useEffect(() => {
     const fetchData = async (sno) => {
       try {
-        const { data } = await user.findOne(sno)
-        // Object.keys(data).forEach((key) => setValue(key, data[key]))
+        const { data } = await user.findOne(Number(sno))
+        Object.keys(data).forEach((key) => setValue(key, data[key]))
       } catch (error) {
         console.error('error:', error)
       }
     }
-    // fetchData(sno)
+    fetchData(sno)
   }, [sno])
 
   const onSubmit = (data) => {
-    console.log('제출 데이터:', data)
+    console.log('제출 데이터 확인:', data)
   }
 
   return (
@@ -74,67 +68,58 @@ const PartnerRegister = () => {
                     <CRow>
                       <CCol>
                         <CFormInput
-                          type="email"
+                          type="text"
                           label="아이디"
-                          {...register('id')}
-                          style={{ width: '100%' }}
-                          readOnly
+                          {...register('id', { required: '아이디를 입력하세요' })}
                         />
+                        {errors.id && <p>{errors.id.message}</p>}
                       </CCol>
                       <CCol>
                         <CFormInput
                           type="text"
                           label="이름"
-                          {...register('userName', { required: '이름을 입력하세요' })}
-                          style={{ width: '100%' }}
+                          {...register('name', { required: '이름을 입력하세요' })}
                         />
-                        {errors.userName && <p>{errors.userName.message}</p>}
+                        {errors.name && <p>{errors.name.message}</p>}
                       </CCol>
                       <CCol>
                         <CFormInput
                           label="연락처"
-                          {...register('userTel', { required: '연락처를 입력하세요' })}
+                          {...register('tel', { required: '연락처를 입력하세요' })}
                           placeholder="01012345678"
-                          style={{ width: '100%' }}
                         />
-                        {errors.userTel && <p>{errors.userTel.message}</p>}
+                        {errors.tel && <p>{errors.tel.message}</p>}
                       </CCol>
                     </CRow>
                     <CRow className="mb-3">
                       <CCol>
-                        <CFormSelect
-                          label="타입"
-                          {...register('managerType')}
-                          style={{ width: '100%' }}
-                          readOnly
-                        >
+                        <CFormSelect label="타입" {...register('userType')}>
                           <option value="partner">파트너</option>
                           <option value="admin">관리자</option>
                         </CFormSelect>
                       </CCol>
-                      <CCol>
-                        <CFormInput
-                          label="파트너명"
-                          {...register('partnerSno')}
-                          placeholder="input PartnerManagement's Name"
-                          style={{ width: '100%' }}
-                        />
-                      </CCol>
+                      {userType === 'partner' && (
+                        <CCol>
+                          <CFormInput
+                            label="파트너명"
+                            {...register('partnerSno', { required: '파트너명을 입력하세요' })}
+                            placeholder="input PartnerManagement's Name"
+                          />
+                          {errors.partnerSno && <p>{errors.partnerSno.message}</p>}
+                        </CCol>
+                      )}
                     </CRow>
                     <CRow className="mb-3">
                       <CCol>
                         <CFormInput
                           label="이메일"
-                          {...register('userEmail', { required: '이메일을 입력하세요' })}
+                          {...register('email', { required: '이메일을 입력하세요' })}
                           placeholder="test@domain.com"
-                          style={{ width: '100%' }}
                         />
-                        {errors.userEmail && <p>{errors.userEmail.message}</p>}
+                        {errors.email && <p>{errors.email.message}</p>}
                       </CCol>
                     </CRow>
                   </CCol>
-
-                  <CCol className="bg-dark p-3"></CCol>
 
                   <CCol xs={12} className="mt-3 d-flex align-items-center">
                     <CButton color="primary" type="submit" className="ms-auto">
@@ -161,14 +146,14 @@ const PartnerRegister = () => {
                         <CFormInput
                           type="text"
                           label="이름"
-                          {...register('userName')}
+                          {...register('name')}
                           style={{ width: '100%' }}
                         />
                       </CCol>
                       <CCol>
                         <CFormInput
                           label="연락처"
-                          {...register('userTel')}
+                          {...register('tel')}
                           placeholder="01012345678"
                           style={{ width: '100%' }}
                         />

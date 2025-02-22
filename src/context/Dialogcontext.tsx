@@ -6,7 +6,7 @@ import modal from '@/components/common/modal'
 type ConfirmOptions = {
   title?: string
   message: string | React.ReactNode // JSX 요소도 받을 수 있도록 변경
-  buttons: { label: string; value: any; color?: string }[]
+  buttons?: { label: string; value: any; color?: string }[]
   size?: 'small' | 'large'
 }
 
@@ -48,7 +48,7 @@ export const DialogProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
       {/* CoreUI 모달 적용 */}
       <CModal
-        visible={!!modalData}
+        visible={isVisible}
         onClose={() => handleAction(null)}
         backdrop={true} // ✅ 바깥 클릭하면 닫히도록 설정
         alignment="center"
@@ -60,17 +60,19 @@ export const DialogProvider: React.FC<{ children: React.ReactNode }> = ({ childr
               <CModalTitle>{modalData.title || '알림'}</CModalTitle>
             </CModalHeader>
             <CModalBody>{modalData.message}</CModalBody>
-            <CModalFooter>
-              {modalData.buttons.map((btn, index) => (
-                <CButton
-                  key={index}
-                  color={btn.color || 'primary'}
-                  onClick={() => handleAction(btn.value)}
-                >
-                  {btn.label}
-                </CButton>
-              ))}
-            </CModalFooter>
+            {modalData.buttons && (
+              <CModalFooter>
+                {modalData.buttons?.map((btn, index) => (
+                  <CButton
+                    key={index}
+                    color={btn.color || 'primary'}
+                    onClick={() => handleAction(btn.value)}
+                  >
+                    {btn.label}
+                  </CButton>
+                ))}
+              </CModalFooter>
+            )}
           </>
         )}
       </CModal>

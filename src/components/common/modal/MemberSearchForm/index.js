@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   CFormSelect,
   CFormInput,
@@ -28,12 +28,16 @@ const MemberSearch = ({ onSelect }) => {
     { id: 10648594, name: '전계영', email: 'ygyg501@naver.com', phone: '01025361567' },
   ]
 
-  // ✅ 체크박스 선택 핸들러
+  // 체크박스 선택 핸들러
   const handleSelectMember = (id) => {
     setSelectedMembers((prev) =>
       prev.includes(id) ? prev.filter((memberId) => memberId !== id) : [...prev, id],
     )
   }
+
+  useEffect(() => {
+    onSelect(selectedMembers)
+  }, [selectedMembers])
 
   return (
     <div>
@@ -104,11 +108,11 @@ const MemberSearch = ({ onSelect }) => {
             value={searchType}
             onChange={(e) => setSearchType(e.target.value)}
           >
-            <option value="아이디">10개보기</option>
-            <option value="아이디">30개보기</option>
-            <option value="아이디">50개보기</option>
-            <option value="아이디">100개보기</option>
-            <option value="아이디">200개보기</option>
+            <option value="10">10개보기</option>
+            <option value="30">30개보기</option>
+            <option value="50">50개보기</option>
+            <option value="100">100개보기</option>
+            <option value="200">200개보기</option>
           </CFormSelect>
         </div>
       </CContainer>

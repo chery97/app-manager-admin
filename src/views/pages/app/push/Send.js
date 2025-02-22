@@ -14,7 +14,7 @@ import {
   CInputGroup,
   CRow,
 } from '@coreui/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutation } from '@tanstack/react-query'
 import push from 'src/api/push'
@@ -23,15 +23,30 @@ import { useNavigate } from 'react-router-dom'
 import MemberSearch from 'src/components/common/modal/MemberSearchForm'
 
 const Send = () => {
-  const [selectedTarget, setSelectedTarget] = useState('전체')
   const {
     register, // 입력 필드와 연결
     handleSubmit, // 폼 제출 핸들러
     watch, // 현재 입력값을 추적
     formState: { errors }, // 입력값 검증 에러 관리
-  } = useForm()
+    setValue,
+  } = useForm({
+    defaultValues: {
+      purpose: 'ad',
+      memberTarget: 'all',
+      selectedMember: [],
+      osType: 'all',
+      scheduleType: 'immediately',
+    }, // 초기값 설정
+  })
+
+  const purpose = watch('purpose') // 발송 목적 선택값
+  const memberTarget = watch('memberTarget') // 수신대상 선택값
+  const selectedMember = watch('selectedMember') || [] // 선택한 회원
+  const osType = watch('osType') || [] // os 선택값
+  const scheduleType = watch('scheduleType') || [] // 스케쥴 선택값
+
   const navigate = useNavigate()
-  const totalMembers = 47352
+  const totalMembers = selectedMember.length
 
   const { confirm } = useDialog()
 
@@ -64,6 +79,8 @@ const Send = () => {
   })
 
   const handleSend = (data) => {
+    console.log(data)
+    return
     const testData = {
       appName: 'appPrototype',
       topic: 'ALL',
@@ -76,7 +93,13 @@ const Send = () => {
   const handleMemberSearchModal = async () => {
     return await confirm({
       title: '회원 선택',
-      message: <MemberSearch />,
+      message: (
+        <MemberSearch
+          onSelect={(selectedIds) => {
+            setValue('selectedMember', selectedIds)
+          }}
+        />
+      ),
       buttons: [{ label: '확인', value: true, color: 'primary' }],
       size: 'large',
     })
@@ -114,7 +137,8 @@ const Send = () => {
                     label={<label htmlFor="ad">광고성</label>}
                     id="ad"
                     name="purpose"
-                    defaultChecked
+                    value="ad"
+                    {...register('purpose')}
                   />
                   <CFormCheck
                     inline
@@ -122,6 +146,8 @@ const Send = () => {
                     label={<label htmlFor="info">정보성</label>}
                     id="info"
                     name="purpose"
+                    value="info"
+                    {...register('purpose')}
                   />
                 </CCol>
               </CRow>
@@ -134,34 +160,31 @@ const Send = () => {
                     <CFormCheck
                       inline
                       type="radio"
-                      label={<label htmlFor="all">전체</label>}
-                      name="target"
+                      label="전체"
                       id="all"
-                      checked={selectedTarget === '전체'}
-                      onChange={() => setSelectedTarget('전체')}
+                      value="all"
+                      {...register('memberTarget')}
                     />
                     <CFormCheck
                       inline
                       type="radio"
-                      label={<label htmlFor="member">회원 선택</label>}
-                      name="target"
+                      label="회원 선택"
                       id="member"
-                      checked={selectedTarget === '회원 선택'}
-                      onChange={() => setSelectedTarget('회원 선택')}
+                      value="member"
+                      {...register('memberTarget')}
                     />
                     <CFormCheck
                       inline
                       type="radio"
-                      label={<label htmlFor="group">그룹 선택</label>}
-                      name="target"
+                      label="그룹 선택"
                       id="group"
-                      checked={selectedTarget === '그룹 선택'}
-                      onChange={() => setSelectedTarget('그룹 선택')}
+                      value="group"
+                      {...register('memberTarget')}
                     />
                     <span className="ms-2 text-primary">회원 총 {totalMembers}명 선택</span>
                   </div>
                   {/* 🔥 회원 선택 시 버튼 노출 */}
-                  {selectedTarget === '회원 선택' && (
+                  {memberTarget === 'member' && (
                     <div className="mt-2 w-100">
                       <CButton color="primary" onClick={handleMemberSearchModal}>
                         회원 선택
@@ -181,7 +204,8 @@ const Send = () => {
                     label={<label htmlFor="allOs">전체</label>}
                     id="allOs"
                     name="os"
-                    defaultChecked
+                    value="all"
+                    {...register('osType')}
                   />
                   <CFormCheck
                     inline
@@ -189,6 +213,8 @@ const Send = () => {
                     label={<label htmlFor="android">Android</label>}
                     id="android"
                     name="os"
+                    value="android"
+                    {...register('osType')}
                   />
                   <CFormCheck
                     inline
@@ -196,6 +222,8 @@ const Send = () => {
                     label={<label htmlFor="ios">IOS</label>}
                     id="ios"
                     name="os"
+                    value="ios"
+                    {...register('osType')}
                   />
                 </CCol>
               </CRow>
@@ -210,7 +238,8 @@ const Send = () => {
                     label={<label htmlFor="immediately">즉시 발송</label>}
                     id="immediately"
                     name="sendType"
-                    defaultChecked
+                    value="immediately"
+                    {...register('scheduleType')}
                   />
                   <CFormCheck
                     inline
@@ -218,6 +247,8 @@ const Send = () => {
                     label={<label htmlFor="reserve">예약 발송</label>}
                     id="reserve"
                     name="sendType"
+                    value="reserve"
+                    {...register('scheduleType')}
                   />
                   <CFormCheck
                     inline
@@ -225,6 +256,8 @@ const Send = () => {
                     label={<label htmlFor="batch">반복 발송</label>}
                     id="batch"
                     name="sendType"
+                    value="batch"
+                    {...register('scheduleType')}
                   />
                 </CCol>
               </CRow>
@@ -283,6 +316,7 @@ const Send = () => {
                     type="text"
                     id="canclePushAgreement"
                     placeholder="수신거부: 설정 > 알림 OFF"
+                    {...register('pushContents', { required: '푸시 내용을 입력하세요.' })}
                   />
                 </CCol>
               </CRow>

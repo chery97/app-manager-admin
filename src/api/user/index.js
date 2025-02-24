@@ -19,7 +19,7 @@ const user = {
   findOne: (sno) => {
     return authRequest({
       method: 'GET',
-      url: `/user/${sno}`,
+      url: `/users/${sno}`,
     })
   },
 }

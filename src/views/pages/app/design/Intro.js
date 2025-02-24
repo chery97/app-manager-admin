@@ -71,6 +71,21 @@ const Intro = () => {
     const file = e.target.files?.[0]
     if (!file) return
 
+    const fileType = ['image/jpeg', 'image/png', 'image/gif'] // 허용할 이미지 타입
+    const maxSize = 5 * 1024 * 1024 // 5MB 제한
+
+    // 파일 형식 검사
+    if (!fileType.includes(file.type)) {
+      alert('허용되지 않은 파일 형식입니다. (jpg, png, gif만 가능)')
+      return
+    }
+
+    // 파일 크기 검사
+    if (file.size > maxSize) {
+      alert('파일 크기가 5MB를 초과합니다.')
+      return
+    }
+
     // 미리보기
     const reader = new FileReader()
     reader.onloadend = () => setShowImage(reader.result)

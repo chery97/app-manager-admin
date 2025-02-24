@@ -27,10 +27,11 @@ import upload from 'src/api/upload'
 
 const Intro = () => {
   const [showImage, setShowImage] = useState()
-  const [image, setImage] = useState()
+  const [mobileImage, setMobileImage] = useState()
+  const [tabletImage, setTabletImage] = useState()
   const [showModal, setShowModal] = useState(false) // 모달 노출 상태값
   const [modalMsg, setModalMsg] = useState('') // 모달 메세지
-  const [isSuccess, setIsSuccess] = useState(true) // 회원가입 성공 상태값
+  const [isSuccess, setIsSuccess] = useState(true) // 인트로 설정 성공 상태값
 
   const {
     register, // 입력 필드와 연결
@@ -41,17 +42,18 @@ const Intro = () => {
 
   const createIntro = async (data) => {
     const result = await intro.create(data)
+    return result.data
   }
 
   const introMutation = useMutation({
     mutationFn: createIntro,
     onSuccess: (data) => {
-      setModalMsg('회원가입이 완료되었습니다.')
+      setModalMsg('저장되었습니다.')
       setIsSuccess(true)
       setShowModal(true)
     },
     onError: (error) => {
-      setModalMsg(error?.response?.data?.message)
+      setModalMsg('저장에 실패하였습니다. 다시 시도해주세요')
       setIsSuccess(false)
       setShowModal(true)
     },
@@ -59,7 +61,8 @@ const Intro = () => {
 
   const onSubmit = (data) => {
     introMutation.mutate({
-      imgUrl: image,
+      mobileImgUrl: mobileImage,
+      tabletImgUrl: tabletImage,
       duration: data.duration,
     })
   }
@@ -81,7 +84,11 @@ const Intro = () => {
       const res = await upload.uploadFile(formData)
 
       if (res.data?.filePath) {
-        setImage(res.data.filePath)
+        if (e.target.id === 'mobileImgUrl') {
+          setMobileImage(res.data.filePath)
+        } else {
+          setTabletImage(res.data.filePath)
+        }
       } else {
         console.error('S3 업로드 실패')
       }
@@ -123,28 +130,31 @@ const Intro = () => {
               <CInputGroup>
                 <CContainer>
                   <CRow>
-                    <CFormLabel htmlFor="MobileImageUpload" className="col-sm-6 col-form-label">
+                    <CFormLabel htmlFor="mobileImgUrl" className="col-sm-6 col-form-label">
                       모바일 이미지 업로드
                     </CFormLabel>
                     <CCol className="mb-4">
                       <CFormInput
                         type="file"
-                        id="imageUpload"
-                        {...register('imgUrl', { required: '이미지를 업로드해주세요.' })}
+                        id="mobileImgUrl"
+                        {...register('mobileImgUrl', {
+                          required: '모바일 이미지를 업로드해주세요.',
+                        })}
                         onChange={imageUpload}
                       />
                     </CCol>
                   </CRow>
                   <CRow>
-                    <CFormLabel htmlFor="TabletImageUpload" className="col-sm-6 col-form-label">
+                    <CFormLabel htmlFor="tabletImgUrl" className="col-sm-6 col-form-label">
                       테블릿 이미지 업로드
                     </CFormLabel>
                     <CCol className="mb-4">
                       <CFormInput
                         type="file"
-                        id="imageUpload"
-                        accept="image/gif"
-                        {...register('imgUrl', { required: '이미지를 업로드해주세요.' })}
+                        id="tabletImgUrl"
+                        {...register('tabletImgUrl', {
+                          required: '테블릿 이미지를 업로드해주세요.',
+                        })}
                         onChange={imageUpload}
                       />
                     </CCol>
@@ -189,11 +199,11 @@ const Intro = () => {
             onClick={() => {
               setShowModal(false)
               if (isSuccess) {
-                navigate('/login')
+                navigate('/app/design/intro')
               }
             }}
           >
-            {isSuccess ? '로그인 페이지로 이동' : '닫기'}
+            {'확인'}
           </CButton>
         </CModalFooter>
       </CModal>

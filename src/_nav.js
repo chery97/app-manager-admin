@@ -71,6 +71,17 @@ const _nav = [
     icon: <CIcon icon={cilBell} customClassName="nav-icon" />,
     items: [
       {
+        component: CNavGroup,
+        name: '디자인',
+        items: [
+          {
+            component: CNavItem,
+            name: '인트로',
+            to: PATHS.APPLICATION.APP_DESIGN.INTRO,
+          },
+        ],
+      },
+      {
         component: CNavItem,
         name: '푸시발송',
         to: PATHS.APPLICATION.APP_PUSH.SEND,

@@ -18,6 +18,11 @@ import {
   CModalHeader,
   CModalTitle,
   CRow,
+  CTab,
+  CTabContent,
+  CTabList,
+  CTabPanel,
+  CTabs,
 } from '@coreui/react'
 import React, { createRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -26,7 +31,8 @@ import intro from 'src/api/app/intro'
 import upload from 'src/api/upload'
 
 const Intro = () => {
-  const [showImage, setShowImage] = useState()
+  const [showMobileImage, setShowMobileImage] = useState()
+  const [showTabletImage, setShowTabletImage] = useState()
   const [mobileImage, setMobileImage] = useState()
   const [tabletImage, setTabletImage] = useState()
   const [showModal, setShowModal] = useState(false) // 모달 노출 상태값
@@ -88,7 +94,12 @@ const Intro = () => {
 
     // 미리보기
     const reader = new FileReader()
-    reader.onloadend = () => setShowImage(reader.result)
+    if (e.target.id === 'mobileImgUrl') {
+      reader.onloadend = () => setShowMobileImage(reader.result)
+    } else {
+      reader.onloadend = () => setShowTabletImage(reader.result)
+    }
+
     reader.readAsDataURL(file)
 
     const formData = new FormData()
@@ -113,42 +124,85 @@ const Intro = () => {
   }
 
   return (
-    <CCard className="mb-4">
+    <CCard className="mb-4 ">
       <CCardHeader>
         <strong>인트로 설정</strong>
       </CCardHeader>
       <CCardBody className="d-flex">
-        <CRow className="m-4">
-          <CCol
-            style={{
-              width: '320px',
-              height: '640px',
-              background: `url('./src/assets/images/iphone15.png') no-repeat center`,
-              backgroundSize: 'contain',
-              padding: '40px 15px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <CImage
-              src={showImage}
-              thumbnail={false}
-              style={{
-                width: '60%',
-                height: '80%',
-              }}
-            />
+        <CRow className="m-4 w-100 align-items-center border-bottom border-light-subtle">
+          <CCol md={2} className="w-50 bg-light p-2 align-items-center">
+            <CTabs activeItemKey="mobile">
+              <CTabList variant="tabs">
+                <CTab itemKey="mobile">
+                  <strong>Mobile</strong>
+                </CTab>
+                <CTab itemKey="tablet">
+                  <strong>Tablet</strong>
+                </CTab>
+              </CTabList>
+              <CTabContent>
+                <CTabPanel className="p-3" itemKey="mobile">
+                  <CCardBody className="d-flex">
+                    <CCol
+                      style={{
+                        width: '320px',
+                        height: '640px',
+                        background: `url('./src/assets/images/iphone15.png') no-repeat center`,
+                        backgroundSize: 'contain',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <CImage
+                        src={showMobileImage}
+                        thumbnail={false}
+                        style={{
+                          width: '40%',
+                          height: '92%',
+                          borderRadius: '40px',
+                        }}
+                      />
+                    </CCol>
+                  </CCardBody>
+                </CTabPanel>
+                <CTabPanel className="p-3" itemKey="tablet">
+                  <CCardBody className="d-flex">
+                    <CCol
+                      style={{
+                        width: '512px',
+                        height: '683px',
+                        background: `url('./src/assets/images/tablet.png') no-repeat center`,
+                        backgroundSize: 'contain',
+                        padding: '40px 15px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <CImage
+                        src={showTabletImage}
+                        thumbnail={false}
+                        style={{
+                          width: '64%',
+                          height: '92%',
+                        }}
+                      />
+                    </CCol>
+                  </CCardBody>
+                </CTabPanel>
+              </CTabContent>
+            </CTabs>
           </CCol>
-          <CCol>
+          <CCol className="w-25">
             <CForm id="introForm" onSubmit={handleSubmit(onSubmit)}>
               <CInputGroup>
                 <CContainer>
-                  <CRow>
-                    <CFormLabel htmlFor="mobileImgUrl" className="col-sm-6 col-form-label">
-                      모바일 이미지 업로드
-                    </CFormLabel>
-                    <CCol className="mb-4">
+                  <CRow className="border-bottom border-light-subtle">
+                    <CCol md={5} className="bg-light p-2 d-flex align-items-center">
+                      <CFormLabel htmlFor="mobileImgUrl">모바일 이미지 업로드</CFormLabel>
+                    </CCol>
+                    <CCol md={4} className="d-flex align-items-center">
                       <CFormInput
                         type="file"
                         id="mobileImgUrl"
@@ -159,11 +213,11 @@ const Intro = () => {
                       />
                     </CCol>
                   </CRow>
-                  <CRow>
-                    <CFormLabel htmlFor="tabletImgUrl" className="col-sm-6 col-form-label">
-                      테블릿 이미지 업로드
-                    </CFormLabel>
-                    <CCol className="mb-4">
+                  <CRow className="border-bottom border-light-subtle">
+                    <CCol md={5} className="bg-light p-2 d-flex align-items-center">
+                      <CFormLabel htmlFor="tabletImgUrl">테블릿 이미지 업로드</CFormLabel>
+                    </CCol>
+                    <CCol md={4} className="d-flex align-items-center">
                       <CFormInput
                         type="file"
                         id="tabletImgUrl"
@@ -174,11 +228,12 @@ const Intro = () => {
                       />
                     </CCol>
                   </CRow>
-                  <CRow>
-                    <CFormLabel htmlFor="duration" className="col-sm-6 col-form-label">
-                      지속시간
-                    </CFormLabel>
-                    <CCol className="mb-4">
+                  <CRow className="border-bottom border-light-subtle">
+                    <CCol md={5} className="bg-light p-2 d-flex align-items-center">
+                      <CFormLabel htmlFor="duration">지속시간</CFormLabel>
+                    </CCol>
+
+                    <CCol className="d-flex align-items-center">
                       <CFormSelect
                         type="select"
                         id="duration"

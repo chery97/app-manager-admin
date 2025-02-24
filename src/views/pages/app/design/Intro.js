@@ -129,10 +129,14 @@ const Intro = () => {
         <strong>인트로 설정</strong>
       </CCardHeader>
       <CCardBody className="d-flex">
-        <CRow className="m-4 w-100 align-items-center border-bottom border-light-subtle">
-          <CCol md={2} className="w-50 bg-light p-2 align-items-center">
+        <CRow className="m-4 w-100">
+          <CCol
+            md={2}
+            className="w-50 bg-light-subtle p-2 align-items-center"
+            style={{ borderRadius: '10px' }}
+          >
             <CTabs activeItemKey="mobile">
-              <CTabList variant="tabs">
+              <CTabList variant="tabs" className="border-bottom border-light-subtle">
                 <CTab itemKey="mobile">
                   <strong>Mobile</strong>
                 </CTab>
@@ -194,15 +198,17 @@ const Intro = () => {
               </CTabContent>
             </CTabs>
           </CCol>
-          <CCol className="w-25">
+          <CCol className="w-25 mx-4">
             <CForm id="introForm" onSubmit={handleSubmit(onSubmit)}>
               <CInputGroup>
                 <CContainer>
-                  <CRow className="border-bottom border-light-subtle">
-                    <CCol md={5} className="bg-light p-2 d-flex align-items-center">
-                      <CFormLabel htmlFor="mobileImgUrl">모바일 이미지 업로드</CFormLabel>
+                  <CRow className="border-bottom">
+                    <CCol md={5} className="p-2 d-flex align-items-center">
+                      <CFormLabel htmlFor="mobileImgUrl">
+                        모바일 이미지 업로드 (320 x 640)
+                      </CFormLabel>
                     </CCol>
-                    <CCol md={4} className="d-flex align-items-center">
+                    <CCol md={6} className="d-flex align-items-center">
                       <CFormInput
                         type="file"
                         id="mobileImgUrl"
@@ -213,11 +219,13 @@ const Intro = () => {
                       />
                     </CCol>
                   </CRow>
-                  <CRow className="border-bottom border-light-subtle">
-                    <CCol md={5} className="bg-light p-2 d-flex align-items-center">
-                      <CFormLabel htmlFor="tabletImgUrl">테블릿 이미지 업로드</CFormLabel>
+                  <CRow className="border-bottom">
+                    <CCol md={5} className="p-2 d-flex align-items-center">
+                      <CFormLabel htmlFor="tabletImgUrl">
+                        테블릿 이미지 업로드 (510 x 680)
+                      </CFormLabel>
                     </CCol>
-                    <CCol md={4} className="d-flex align-items-center">
+                    <CCol md={6} className="d-flex align-items-center">
                       <CFormInput
                         type="file"
                         id="tabletImgUrl"
@@ -228,12 +236,12 @@ const Intro = () => {
                       />
                     </CCol>
                   </CRow>
-                  <CRow className="border-bottom border-light-subtle">
-                    <CCol md={5} className="bg-light p-2 d-flex align-items-center">
+                  <CRow className="border-bottom">
+                    <CCol md={5} className="p-2 d-flex align-items-center">
                       <CFormLabel htmlFor="duration">지속시간</CFormLabel>
                     </CCol>
 
-                    <CCol className="d-flex align-items-center">
+                    <CCol md={4} className="d-flex align-items-center">
                       <CFormSelect
                         type="select"
                         id="duration"
@@ -245,6 +253,14 @@ const Intro = () => {
                         ]}
                         {...register('duration', { required: '지속시간을 설정해주세요.' })}
                       />
+                    </CCol>
+                  </CRow>
+                  <CRow className="mt-lg-5 d-flex flex-column">
+                    <CCol>
+                      <p className="text-warning">&#8251; 이미지 업로드시 주의사항</p>
+                      <p style={{ fontSize: '15px' }}>
+                        - 표기된 이미지 사이즈에 맞춰 업로드해주시기 바랍니다.
+                      </p>
                     </CCol>
                   </CRow>
                 </CContainer>

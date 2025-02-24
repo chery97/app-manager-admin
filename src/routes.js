@@ -116,6 +116,7 @@ const routes = [
   // service
   { path: '/service/partner', name: 'Partner', element: Partner },
   { path: '/service/partner/:sno', name: 'Partner Detail', element: PartnerRegister },
+  { path: '/service/partner/register', name: 'Partner Register', element: PartnerRegister },
   { path: '/service/app', name: 'App', element: App },
   { path: '/service/app/register', name: 'app register', element: AppRegister },
 

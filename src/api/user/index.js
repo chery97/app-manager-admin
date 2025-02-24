@@ -22,6 +22,14 @@ const user = {
       url: `/users/${sno}`,
     })
   },
+  updateUserInfo: async (data) => {
+    const result = await authRequest({
+      method: 'PATCH',
+      url: `/user-info/${data.userNo}`,
+      data,
+    })
+    return result
+  },
 }
 
 export default user

@@ -172,13 +172,18 @@ const PartnerRegister = () => {
                       <CCol>
                         <CFormInput
                           label="연락처"
-                          {...register('tel', { required: '연락처를 입력하세요' })}
+                          type="text"
+                          {...register('tel', {
+                            required: '연락처를 입력하세요',
+                            pattern: { value: /^[0-9]+$/, message: '숫자만 입력하세요.' },
+                          })}
                           placeholder="01012345678"
                         />
                         {errors.tel && <p>{errors.tel.message}</p>}
                       </CCol>
                       <CCol>
                         <CFormInput
+                          type="email"
                           label="이메일"
                           {...register('email', { required: '이메일을 입력하세요' })}
                           placeholder="test@domain.com"

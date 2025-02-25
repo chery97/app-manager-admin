@@ -4,8 +4,14 @@ const intro = {
   create: (params) => {
     return authRequest({
       method: 'POST',
-      url: '/design',
+      url: '/app/design',
       data: params,
+    })
+  },
+  getIntro: () => {
+    return authRequest({
+      method: 'GET',
+      url: '/app/design',
     })
   },
 }

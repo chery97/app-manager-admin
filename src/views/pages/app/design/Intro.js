@@ -24,9 +24,9 @@ import {
   CTabPanel,
   CTabs,
 } from '@coreui/react'
-import React, { createRef, useState } from 'react'
+import React, { createRef, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import intro from 'src/api/app/intro'
 import upload from 'src/api/upload'
 
@@ -50,6 +50,20 @@ const Intro = () => {
     const result = await intro.create(data)
     return result.data
   }
+
+  const getIntro = async () => {
+    const result = await intro.getIntro()
+    return result.data[0]
+  }
+
+  const {
+    data: introData,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['intro'],
+    queryFn: getIntro, // 서버에서 초기 데이터 가져오기
+  })
 
   const introMutation = useMutation({
     mutationFn: createIntro,
@@ -146,7 +160,7 @@ const Intro = () => {
               </CTabList>
               <CTabContent>
                 <CTabPanel className="p-3" itemKey="mobile">
-                  <CCardBody className="d-flex">
+                  <CCardBody className="d-flex position-relative">
                     <CCol
                       style={{
                         width: '320px',
@@ -156,17 +170,23 @@ const Intro = () => {
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
+                        position: 'relative',
+                        zIndex: 2,
                       }}
                     >
-                      <CImage
-                        src={showMobileImage}
-                        thumbnail={false}
-                        style={{
-                          width: '40%',
-                          height: '92%',
-                          borderRadius: '40px',
-                        }}
-                      />
+                      {introData && (
+                        <CImage
+                          src={showMobileImage ?? introData?.mobileImgUrl}
+                          thumbnail={false}
+                          style={{
+                            width: '40%',
+                            height: '92%',
+                            borderRadius: '40px',
+                            position: 'absolute',
+                            zIndex: 1,
+                          }}
+                        />
+                      )}
                     </CCol>
                   </CCardBody>
                 </CTabPanel>
@@ -184,14 +204,16 @@ const Intro = () => {
                         alignItems: 'center',
                       }}
                     >
-                      <CImage
-                        src={showTabletImage}
-                        thumbnail={false}
-                        style={{
-                          width: '64%',
-                          height: '92%',
-                        }}
-                      />
+                      {introData && (
+                        <CImage
+                          src={showTabletImage ?? introData?.tabletImgUrl}
+                          thumbnail={false}
+                          style={{
+                            width: '64%',
+                            height: '92%',
+                          }}
+                        />
+                      )}
                     </CCol>
                   </CCardBody>
                 </CTabPanel>

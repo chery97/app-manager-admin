@@ -1,16 +1,21 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useParams } from 'react-router-dom'
+import { NavLink, useParams } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import {
   CButton,
   CCard,
   CCardBody,
-  CCardHeader,
+  CCardFooter,
   CCol,
   CForm,
   CFormInput,
   CFormSelect,
+  CModal,
+  CModalBody,
+  CModalFooter,
+  CModalHeader,
+  CModalTitle,
   CRow,
   CTab,
   CTabContent,
@@ -19,21 +24,22 @@ import {
   CTabs,
 } from '@coreui/react'
 import user from 'src/api/user'
+import login from 'src/api/login'
 
 const PartnerRegister = () => {
   const { sno } = useParams()
   const {
     register,
     handleSubmit,
-    setValue,
-    watch,
     reset,
     formState: { errors },
   } = useForm()
 
   const isEditable = !!sno
-  const userType = watch('userType')
   const [activeTab, setActiveTab] = React.useState('detail')
+  const [showModal, setShowModal] = useState(false)
+  const [modalMsg, setModalMsg] = useState('')
+  const [isSuccess, setIsSuccess] = useState(true)
 
   const handleTabChange = (tab) => {
     setActiveTab(tab)
@@ -49,12 +55,13 @@ const PartnerRegister = () => {
   }
 
   useEffect(() => {
-    fetchData(sno)
+    if (sno) {
+      fetchData(sno)
+    }
   }, [sno])
 
   const onSubmitDetail = (data) => {
     if (isEditable) {
-      console.log('파트너 수정 탭 제출 데이터:', data)
       partnerUpdateMutation.mutate({
         id: data.id,
         userNo: sno,
@@ -64,13 +71,43 @@ const PartnerRegister = () => {
         email: data.email,
       })
     } else {
-      console.log('파트너 등록 탭 제출 데이터:', data)
+      joinMutation.mutate({
+        id: data.id,
+        password: data.password,
+        userName: data.name,
+        userTel: data.tel,
+        userType: data.userType,
+        userEmail: data.email,
+      })
     }
   }
 
   const partnerUpdateMutation = useMutation({
     mutationFn: async (data) => await user.updateUserInfo(data),
-    onSuccess: (data) => {},
+    onSuccess: (data) => {
+      setModalMsg('수정이 완료되었습니다.')
+      setIsSuccess(true)
+      setShowModal(true)
+    },
+    onError: (error) => {
+      setModalMsg(error?.response?.data?.message)
+      setIsSuccess(false)
+      setShowModal(true)
+    },
+  })
+
+  const joinMutation = useMutation({
+    mutationFn: async (data) => await login.join(data),
+    onSuccess: (data) => {
+      setModalMsg('등록이 완료되었습니다.')
+      setIsSuccess(true)
+      setShowModal(true)
+    },
+    onError: (error) => {
+      setModalMsg(error?.response?.data?.message)
+      setIsSuccess(false)
+      setShowModal(true)
+    },
   })
 
   const onSubmitApp = (data) => {
@@ -78,24 +115,24 @@ const PartnerRegister = () => {
   }
 
   return (
-    <CCard className="mb-4">
-      <CCardHeader className="d-flex align-items-center">
-        <CTabs activeItemKey={activeTab} onTabChange={handleTabChange}>
-          <CTabList variant="tabs">
-            <CTab itemKey="detail">
-              <strong>파트너 등록</strong>
-            </CTab>
-            <CTab itemKey="app">
-              <strong>앱 관리</strong>
-            </CTab>
-          </CTabList>
-          <CTabContent>
-            <CTabPanel className="p-3" itemKey="detail">
-              <CCardBody>
-                <CForm className="row g-3" onSubmit={handleSubmit(onSubmitDetail)}>
-                  <CCol className="bg-dark p-3">
+    <>
+      <CTabs activeItemKey={activeTab} onTabChange={handleTabChange}>
+        <CTabList variant="tabs">
+          <CTab itemKey="detail">
+            <strong>{isEditable ? '파트너 수정' : '파트너 등록'}</strong>
+          </CTab>
+          <CTab itemKey="app">
+            <strong>앱 관리</strong>
+          </CTab>
+        </CTabList>
+        <CTabContent>
+          <CTabPanel className="p-2" itemKey="detail">
+            <CForm className="row g-3" onSubmit={handleSubmit(onSubmitDetail)}>
+              <CCard className="p-0">
+                <CCardBody>
+                  <CCol className="bg-dark p-3" xs={12} md={6}>
                     <CRow className="mb-3">
-                      <CCol>
+                      <CCol xs={6}>
                         <CFormInput
                           type="text"
                           label="아이디"
@@ -104,6 +141,18 @@ const PartnerRegister = () => {
                         />
                         {errors.id && <p>{errors.id.message}</p>}
                       </CCol>
+                      {!isEditable && (
+                        <CCol xs={6}>
+                          <CFormInput
+                            type="password"
+                            label="비밀번호"
+                            {...register('password', { required: '비밀번호를 입력하세요' })}
+                          />
+                          {errors.password && <p>{errors.password.message}</p>}
+                        </CCol>
+                      )}
+                    </CRow>
+                    <CRow className="mb-3">
                       <CCol>
                         <CFormInput
                           type="text"
@@ -112,16 +161,6 @@ const PartnerRegister = () => {
                         />
                         {errors.name && <p>{errors.name.message}</p>}
                       </CCol>
-                      <CCol>
-                        <CFormInput
-                          label="연락처"
-                          {...register('tel', { required: '연락처를 입력하세요' })}
-                          placeholder="01012345678"
-                        />
-                        {errors.tel && <p>{errors.tel.message}</p>}
-                      </CCol>
-                    </CRow>
-                    <CRow className="mb-3">
                       <CCol>
                         <CFormSelect label="타입" {...register('userType')}>
                           <option value="partner">파트너</option>
@@ -132,6 +171,14 @@ const PartnerRegister = () => {
                     <CRow className="mb-3">
                       <CCol>
                         <CFormInput
+                          label="연락처"
+                          {...register('tel', { required: '연락처를 입력하세요' })}
+                          placeholder="01012345678"
+                        />
+                        {errors.tel && <p>{errors.tel.message}</p>}
+                      </CCol>
+                      <CCol>
+                        <CFormInput
                           label="이메일"
                           {...register('email', { required: '이메일을 입력하세요' })}
                           placeholder="test@domain.com"
@@ -140,19 +187,20 @@ const PartnerRegister = () => {
                       </CCol>
                     </CRow>
                   </CCol>
-
-                  <CCol xs={12} className="mt-3 d-flex align-items-center">
-                    <CButton color="primary" type="submit" className="ms-auto">
-                      {isEditable ? '수정' : '등록'}
-                    </CButton>
-                  </CCol>
-                </CForm>
-              </CCardBody>
-            </CTabPanel>
-            <CTabPanel className="p-3" itemKey="app">
-              <CCardBody>
-                <CForm className="row g-3" onSubmit={handleSubmit(onSubmitApp)}>
-                  <CCol className="bg-dark p-3">
+                </CCardBody>
+                <CCardFooter className="text-end">
+                  <CButton type="submit" color="primary">
+                    {isEditable ? '수정' : '등록'}
+                  </CButton>
+                </CCardFooter>
+              </CCard>
+            </CForm>
+          </CTabPanel>
+          <CTabPanel className="p-2" itemKey="app">
+            <CForm className="row g-3" onSubmit={handleSubmit(onSubmitApp)}>
+              <CCard className="p-0">
+                <CCardBody>
+                  <CCol className="bg-dark p-3" xs={12} md={6}>
                     <CRow>
                       <CCol>
                         <CFormInput label="아이디" style={{ width: '100%' }} readOnly />
@@ -170,18 +218,36 @@ const PartnerRegister = () => {
                     </CRow>
                   </CCol>
                   <CCol className="bg-dark p-3"></CCol>
-                  <CCol xs={12} className="mt-3 d-flex align-items-center">
-                    <CButton color="primary" type="submit" className="ms-auto">
-                      저장
-                    </CButton>
-                  </CCol>
-                </CForm>
-              </CCardBody>
-            </CTabPanel>
-          </CTabContent>
-        </CTabs>
-      </CCardHeader>
-    </CCard>
+                </CCardBody>
+                <CCardFooter className="text-end">
+                  <CButton type="submit" color="primary">
+                    {isEditable ? '수정' : '등록'}
+                  </CButton>
+                </CCardFooter>
+              </CCard>
+            </CForm>
+          </CTabPanel>
+        </CTabContent>
+      </CTabs>
+
+      <CModal visible={showModal}>
+        <CModalHeader>
+          <CModalTitle>{setIsSuccess ? '완료' : 'error'}</CModalTitle>
+        </CModalHeader>
+        <CModalBody>{modalMsg}</CModalBody>
+        <CModalFooter>
+          <CButton
+            color="secondary"
+            onClick={() => {
+              setShowModal(false)
+              window.location.reload()
+            }}
+          >
+            닫기
+          </CButton>
+        </CModalFooter>
+      </CModal>
+    </>
   )
 }
 export default PartnerRegister

@@ -61,7 +61,6 @@ const PartnerRegister = () => {
         name: data.name,
         tel: data.tel,
         userType: data.userType,
-        partnerSno: data.partnerSno,
         email: data.email,
       })
     } else {
@@ -129,16 +128,6 @@ const PartnerRegister = () => {
                           <option value="admin">관리자</option>
                         </CFormSelect>
                       </CCol>
-                      {userType === 'partner' && (
-                        <CCol>
-                          <CFormInput
-                            label="파트너명"
-                            {...register('partnerSno', { required: '파트너명을 입력하세요' })}
-                            placeholder="input PartnerManagement's Name"
-                          />
-                          {errors.partnerSno && <p>{errors.partnerSno.message}</p>}
-                        </CCol>
-                      )}
                     </CRow>
                     <CRow className="mb-3">
                       <CCol>

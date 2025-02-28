@@ -79,15 +79,15 @@ const Send = () => {
   })
 
   const handleSend = (data) => {
-    console.log(data)
-    return
-    const testData = {
+    const sendData = {
       appName: 'appPrototype',
-      topic: 'ALL',
+      osType: data.osType,
       title: data.pushTitle,
       message: data.pushContents,
+      pushDisagree: data.pushDisagree,
+      deepLink: data.deepLink,
     }
-    pushSendMutation.mutate(testData)
+    pushSendMutation.mutate(sendData)
   }
 
   const handleMemberSearchModal = async () => {
@@ -204,7 +204,7 @@ const Send = () => {
                     label={<label htmlFor="allOs">전체</label>}
                     id="allOs"
                     name="os"
-                    value="all"
+                    value="ALL"
                     {...register('osType')}
                   />
                   <CFormCheck
@@ -213,7 +213,7 @@ const Send = () => {
                     label={<label htmlFor="android">Android</label>}
                     id="android"
                     name="os"
-                    value="android"
+                    value="ANDROID"
                     {...register('osType')}
                   />
                   <CFormCheck
@@ -222,7 +222,7 @@ const Send = () => {
                     label={<label htmlFor="ios">IOS</label>}
                     id="ios"
                     name="os"
-                    value="ios"
+                    value="IOS"
                     {...register('osType')}
                   />
                 </CCol>
@@ -316,7 +316,7 @@ const Send = () => {
                     type="text"
                     id="canclePushAgreement"
                     placeholder="수신거부: 설정 > 알림 OFF"
-                    {...register('pushContents', { required: '푸시 내용을 입력하세요.' })}
+                    {...register('pushDisagree', { required: '수신 동의 철회 방법을 입력하세요.' })}
                   />
                 </CCol>
               </CRow>
@@ -339,6 +339,7 @@ const Send = () => {
                     type="text"
                     id="canclePushAgreement"
                     placeholder="https://naver.com"
+                    {...register('deepLink')}
                   />
                   <CCardText>• 입력되지 않은 푸시는 메인페이지로 이동됩니다.</CCardText>
                 </CCol>

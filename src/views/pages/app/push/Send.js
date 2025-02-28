@@ -34,7 +34,7 @@ const Send = () => {
       purpose: 'ad',
       memberTarget: 'all',
       selectedMember: [],
-      osType: 'all',
+      osType: 'ALL',
       scheduleType: 'immediately',
     }, // 초기값 설정
   })

@@ -53,7 +53,7 @@ const Intro = () => {
 
   const getIntro = async () => {
     const result = await intro.getIntro()
-    return result.data[0]
+    return result.data?.[0] ?? null
   }
 
   const {

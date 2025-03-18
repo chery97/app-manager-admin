@@ -17,6 +17,8 @@ import LoginExpiredModal from 'src/components/common/modal/LoginExpiredModal'
 // We use those styles to show code examples, you should remove them in your application.
 import './scss/examples.scss'
 import { DialogProvider } from 'src/context/Dialogcontext'
+import login from 'src/api/login'
+import authRequest from 'src/api/core'
 
 // Containers
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
@@ -76,10 +78,36 @@ const ProtectedRoute = () => {
   }
 
   useEffect(() => {
-    const token = localStorage.getItem('GEEK_SSID')
-    if (!token) {
-      setShowModal(true) // 토큰이 없으면 모달 표시
+    const checkAuth = async () => {
+      const token = localStorage.getItem('GEEK_SSID')
+      if (!token) {
+        setShowModal(true) // 토큰이 없으면 모달 표시
+        return
+      }
+
+      // 페이지 로드 시 토근 인증 여부 체크 및 재발급 처리
+      try {
+        await authRequest({ method: 'POST', url: '/common/auth/token-check' })
+      } catch (error) {
+        if (error.response && error.response.data.statusCode === 401) {
+          const { data: newAccessToken } = await authRequest({
+            method: 'POST',
+            url: '/common/auth/refresh',
+            data: { refreshToken: `${localStorage.getItem('GEEK_SSRID')}` },
+          })
+          if (newAccessToken) {
+            localStorage.setItem('GEEK_SSID', newAccessToken)
+          } else {
+            console.error('유효하지 않은 RefreshToken', error)
+            setShowModal(true)
+          }
+        } else {
+          console.error('토큰 검증 실패', error)
+          setShowModal(true)
+        }
+      }
     }
+    checkAuth()
   }, [])
 
   return (

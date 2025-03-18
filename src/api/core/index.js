@@ -3,7 +3,6 @@ import config from '@coreui/coreui/js/src/util/config'
 import { useNavigate } from 'react-router-dom'
 import LoginExpiredModal from 'src/components/common/modal/LoginExpiredModal'
 import React from 'react'
-import { isClass } from 'eslint-plugin-react/lib/util/ast'
 
 // Axios 인스턴스 생성
 const authRequest = axios.create({

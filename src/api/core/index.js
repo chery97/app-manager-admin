@@ -1,4 +1,9 @@
 import axios from 'axios'
+import config from '@coreui/coreui/js/src/util/config'
+import { useNavigate } from 'react-router-dom'
+import LoginExpiredModal from 'src/components/common/modal/LoginExpiredModal'
+import React from 'react'
+import { isClass } from 'eslint-plugin-react/lib/util/ast'
 
 // Axios 인스턴스 생성
 const authRequest = axios.create({
@@ -23,10 +28,26 @@ authRequest.interceptors.request.use(
 // 응답 인터셉터 설정 (선택 사항: 예외 처리, 리프레시 토큰 등)
 authRequest.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     if (error.response && error.response.status === 401) {
-      console.error('인증 오류! 로그인 필요.')
-      // 여기서 로그아웃 처리 또는 리프레시 토큰 로직 추가 가능
+      const { data: newAccessToken } = await authRequest({
+        method: 'POST',
+        url: '/common/auth/refresh',
+        data: { refreshToken: `${localStorage.getItem('GEEK_SSRID')}` },
+      })
+      if (newAccessToken) {
+        localStorage.setItem('GEEK_SSID', newAccessToken)
+      } else {
+        const navigate = useNavigate()
+        return (
+          <LoginExpiredModal
+            isVisible={true}
+            onClose={() => {
+              navigate('/login', { replace: true })
+            }}
+          ></LoginExpiredModal>
+        )
+      }
     }
     return Promise.reject(error)
   },

@@ -91,12 +91,12 @@ const Intro = () => {
     const file = e.target.files?.[0]
     if (!file) return
 
-    const fileType = ['image/jpeg', 'image/png', 'image/gif'] // 허용할 이미지 타입
+    const fileType = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'] // 허용할 이미지 타입
     const maxSize = 5 * 1024 * 1024 // 5MB 제한
 
     // 파일 형식 검사
     if (!fileType.includes(file.type)) {
-      alert('허용되지 않은 파일 형식입니다. (jpg, png, gif만 가능)')
+      alert('허용되지 않은 파일 형식입니다. (jpg, png, gif, webp만 가능)')
       return
     }
 
@@ -293,7 +293,7 @@ const Intro = () => {
       </CCardBody>
       <CCardFooter className="text-end">
         <CButton type="submit" form="introForm" color="primary">
-          저장
+          {introData ? '수정' : '저장'}
         </CButton>
       </CCardFooter>
       <CModal visible={showModal}>

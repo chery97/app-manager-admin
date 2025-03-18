@@ -87,9 +87,9 @@ const ProtectedRoute = () => {
       const refreshToken = localStorage.getItem('GEEK_SSRID')
 
       const decoded = JSON.parse(atob(accessToken.split('.')[1]))
-      const expiresIn = decoded.exp * 1000 - Date.now()
+      let expiresIn = decoded.exp * 1000 - Date.now()
 
-      // 토큰 만료 3분전 미리 갱신
+      // 토큰 만료 3분 전 미리 갱신 처리
       if (expiresIn < 3 * 60 * 1000) {
         try {
           const { data: newAccessToken } = await authRequest({
@@ -97,10 +97,12 @@ const ProtectedRoute = () => {
             url: '/common/auth/refresh',
             data: { refreshToken: `${refreshToken}` },
           })
-          console.log(newAccessToken)
           if (newAccessToken) {
-            console.log('재발급1')
             localStorage.setItem('GEEK_SSID', newAccessToken)
+
+            // setTimeout과 중복 실행 방지
+            const newDecoded = JSON.parse(atob(newAccessToken.split('.')[1]))
+            expiresIn = newDecoded.exp * 1000 - Date.now()
           } else {
             console.error('유효하지 않은 RefreshToken', error)
             setShowModal(true)

@@ -14,10 +14,11 @@ import {
 } from '@coreui/react'
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { AppHeaderDropdown } from './header/index'
 import { AppBreadcrumb } from './index'
+import authRequest from 'src/api/core'
 
 const AppHeader = () => {
   const navigate = useNavigate()
@@ -34,7 +35,9 @@ const AppHeader = () => {
     })
   }, [])
 
-  const goLogout = () => {
+  const goLogout = async () => {
+    const result = await authRequest({ method: 'POST', url: '/app/users/logout' })
+    if (!result) alert('로그아웃 중 토큰에 문제가 발생하였습니다. 고객센터에 문의해주세요')
     localStorage.removeItem('GEEK_SSID')
     localStorage.removeItem('GEEK_SSRID')
     navigate('/login', { replace: true })

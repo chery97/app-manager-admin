@@ -10,12 +10,43 @@ const authRequest = axios.create({
   timeout: 5000, // 요청 타임아웃 (5초)
 })
 
+const isTokenExpired = (token) => {
+  if (!token) return true
+  const decoded = JSON.parse(atob(token.split('.')[1]))
+  return decoded.exp * 1000 < Date.now()
+}
+
 // 요청 인터셉터 설정
 authRequest.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('GEEK_SSID') // 토큰 가져오기
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+  async (config) => {
+    let accessToken = localStorage.getItem('GEEK_SSID')
+    const refreshToken = localStorage.getItem('refreshToken')
+
+    // 토큰만료 시 새 토큰 발급
+    if (isTokenExpired(accessToken) && refreshToken) {
+      const { data: newAccessToken } = await authRequest({
+        method: 'POST',
+        url: '/common/auth/refresh',
+        data: { refreshToken: `${localStorage.getItem('GEEK_SSRID')}` },
+      })
+      if (newAccessToken) {
+        localStorage.setItem('GEEK_SSID', newAccessToken)
+        accessToken = newAccessToken
+      } else {
+        const navigate = useNavigate()
+        return (
+          <LoginExpiredModal
+            isVisible={true}
+            onClose={() => {
+              navigate('/login', { replace: true })
+            }}
+          ></LoginExpiredModal>
+        )
+      }
+    }
+
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`
     }
     return config
   },
@@ -29,6 +60,7 @@ authRequest.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response && error.response.status === 401) {
+      // 만료 토큰 갱신
       const { data: newAccessToken } = await authRequest({
         method: 'POST',
         url: '/common/auth/refresh',

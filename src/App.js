@@ -78,36 +78,41 @@ const ProtectedRoute = () => {
   }
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const token = localStorage.getItem('GEEK_SSID')
-      if (!token) {
+    const checkAccessToken = async () => {
+      const accessToken = localStorage.getItem('GEEK_SSID')
+      if (!accessToken) {
         setShowModal(true) // 토큰이 없으면 모달 표시
         return
       }
+      const refreshToken = localStorage.getItem('GEEK_SSRID')
 
-      // 페이지 로드 시 토근 인증 여부 체크 및 재발급 처리
-      try {
-        await authRequest({ method: 'POST', url: '/common/auth/token-check' })
-      } catch (error) {
-        if (error.response && error.response.data.statusCode === 401) {
+      const decoded = JSON.parse(atob(accessToken.split('.')[1]))
+      const expiresIn = decoded.exp * 1000 - Date.now()
+
+      // 토큰 만료 3분전 미리 갱신
+      if (expiresIn < 3 * 60 * 1000) {
+        try {
           const { data: newAccessToken } = await authRequest({
             method: 'POST',
             url: '/common/auth/refresh',
-            data: { refreshToken: `${localStorage.getItem('GEEK_SSRID')}` },
+            data: { refreshToken: `${refreshToken}` },
           })
+          console.log(newAccessToken)
           if (newAccessToken) {
+            console.log('재발급1')
             localStorage.setItem('GEEK_SSID', newAccessToken)
           } else {
             console.error('유효하지 않은 RefreshToken', error)
             setShowModal(true)
           }
-        } else {
+        } catch (error) {
           console.error('토큰 검증 실패', error)
           setShowModal(true)
         }
       }
+      setTimeout(checkAccessToken, expiresIn - 3 * 60 * 1000)
     }
-    checkAuth()
+    checkAccessToken()
   }, [])
 
   return (

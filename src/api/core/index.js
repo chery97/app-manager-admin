@@ -20,14 +20,14 @@ const isTokenExpired = (token) => {
 authRequest.interceptors.request.use(
   async (config) => {
     let accessToken = localStorage.getItem('GEEK_SSID')
-    const refreshToken = localStorage.getItem('refreshToken')
+    const refreshToken = localStorage.getItem('GEEK_SSRID')
 
     // 토큰만료 시 새 토큰 발급
     if (isTokenExpired(accessToken) && refreshToken) {
       const { data: newAccessToken } = await authRequest({
         method: 'POST',
         url: '/common/auth/refresh',
-        data: { refreshToken: `${localStorage.getItem('GEEK_SSRID')}` },
+        data: { refreshToken: refreshToken },
       })
       if (newAccessToken) {
         localStorage.setItem('GEEK_SSID', newAccessToken)

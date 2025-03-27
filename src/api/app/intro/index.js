@@ -8,6 +8,13 @@ const intro = {
       data: params,
     })
   },
+  update: (params) => {
+    return authRequest({
+      method: 'PUT',
+      url: '/app/design',
+      data: params,
+    })
+  },
   getIntro: () => {
     return authRequest({
       method: 'GET',

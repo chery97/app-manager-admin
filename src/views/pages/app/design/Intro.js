@@ -51,6 +51,11 @@ const Intro = () => {
     return result.data
   }
 
+  const updateIntro = async (data) => {
+    const result = await intro.update(data)
+    return result.data
+  }
+
   const getIntro = async () => {
     const result = await intro.getIntro()
     return result.data?.[0] ?? null
@@ -66,7 +71,7 @@ const Intro = () => {
   })
 
   const introMutation = useMutation({
-    mutationFn: createIntro,
+    mutationFn: introData ? updateIntro : createIntro,
     onSuccess: (data) => {
       setModalMsg('저장되었습니다.')
       setIsSuccess(true)
@@ -179,8 +184,8 @@ const Intro = () => {
                           src={showMobileImage ?? introData?.mobileImgUrl}
                           thumbnail={false}
                           style={{
-                            width: '40%',
-                            height: '92%',
+                            width: '270px',
+                            height: '585px',
                             borderRadius: '40px',
                             position: 'absolute',
                             zIndex: 1,

@@ -272,6 +272,7 @@ const Intro = () => {
                       <CFormSelect
                         type="select"
                         id="duration"
+                        value={introData && introData?.duration}
                         options={[
                           { label: '선택', value: '', disabled: true },
                           { label: '3s', value: '3' },

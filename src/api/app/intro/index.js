@@ -10,7 +10,7 @@ const intro = {
   },
   update: (params) => {
     return authRequest({
-      method: 'PUT',
+      method: 'PATCH',
       url: '/app/design',
       data: params,
     })

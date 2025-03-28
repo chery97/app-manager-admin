@@ -35,6 +35,7 @@ const Intro = () => {
   const [showTabletImage, setShowTabletImage] = useState()
   const [mobileImage, setMobileImage] = useState()
   const [tabletImage, setTabletImage] = useState()
+  const [introDuration, setIntroDuration] = useState()
   const [showModal, setShowModal] = useState(false) // 모달 노출 상태값
   const [modalMsg, setModalMsg] = useState('') // 모달 메세지
   const [isSuccess, setIsSuccess] = useState(true) // 인트로 설정 성공 상태값
@@ -88,7 +89,7 @@ const Intro = () => {
     introMutation.mutate({
       mobileImgUrl: mobileImage,
       tabletImgUrl: tabletImage,
-      duration: data.duration,
+      duration: introDuration,
     })
   }
 
@@ -276,7 +277,8 @@ const Intro = () => {
                       <CFormSelect
                         type="select"
                         id="duration"
-                        value={introData && introData?.duration}
+                        value={introDuration ?? introData?.duration}
+                        onChange={(e) => setIntroDuration(e.target.value)} // 변경 시 상태 업데이트
                         options={[
                           { label: '선택', value: '', disabled: true },
                           { label: '3s', value: '3' },

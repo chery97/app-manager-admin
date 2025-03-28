@@ -184,8 +184,8 @@ const Intro = () => {
                           src={showMobileImage ?? introData?.mobileImgUrl}
                           thumbnail={false}
                           style={{
-                            width: '270px',
-                            height: '585px',
+                            width: '275px',
+                            height: '590px',
                             borderRadius: '40px',
                             position: 'absolute',
                             zIndex: 1,
@@ -214,8 +214,8 @@ const Intro = () => {
                           src={showTabletImage ?? introData?.tabletImgUrl}
                           thumbnail={false}
                           style={{
-                            width: '410px',
-                            height: '550px',
+                            width: '420px',
+                            height: '560px',
                           }}
                         />
                       )}

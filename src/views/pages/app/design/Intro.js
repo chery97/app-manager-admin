@@ -214,8 +214,8 @@ const Intro = () => {
                           src={showTabletImage ?? introData?.tabletImgUrl}
                           thumbnail={false}
                           style={{
-                            width: '64%',
-                            height: '92%',
+                            width: '410px',
+                            height: '550px',
                           }}
                         />
                       )}

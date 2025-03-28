@@ -239,9 +239,11 @@ const Intro = () => {
                       <CFormInput
                         type="file"
                         id="mobileImgUrl"
-                        {...register('mobileImgUrl', {
-                          required: '모바일 이미지를 업로드해주세요.',
-                        })}
+                        {...(introData && introData.mobileImgUrl
+                          ? {}
+                          : register('mobileImgUrl', {
+                              required: '모바일 이미지를 업로드해주세요.',
+                            }))}
                         onChange={imageUpload}
                       />
                     </CCol>
@@ -256,9 +258,11 @@ const Intro = () => {
                       <CFormInput
                         type="file"
                         id="tabletImgUrl"
-                        {...register('tabletImgUrl', {
-                          required: '테블릿 이미지를 업로드해주세요.',
-                        })}
+                        {...(introData && introData.tabletImgUrl
+                          ? {}
+                          : register('tabletImgUrl', {
+                              required: '테블릿 이미지를 업로드해주세요.',
+                            }))}
                         onChange={imageUpload}
                       />
                     </CCol>
@@ -279,7 +283,11 @@ const Intro = () => {
                           { label: '4s', value: '4' },
                           { label: '5s', value: '5' },
                         ]}
-                        {...register('duration', { required: '지속시간을 설정해주세요.' })}
+                        {...(introData && introData.duration
+                          ? {}
+                          : register('duration', {
+                              required: '지속시간을 설정해주세요.',
+                            }))}
                       />
                     </CCol>
                   </CRow>

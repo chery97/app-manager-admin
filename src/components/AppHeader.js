@@ -36,10 +36,13 @@ const AppHeader = () => {
   }, [])
 
   const goLogout = async () => {
-    const result = await authRequest({ method: 'POST', url: '/app/users/logout' })
-    if (!result) alert('로그아웃 중 토큰에 문제가 발생하였습니다. 고객센터에 문의해주세요')
+    const result = await authRequest({
+      method: 'POST',
+      url: '/app/users/logout',
+      withCredentials: true,
+    })
+    if (!result) alert('로그아웃에 실패하였습니다. 고객센터에 문의해주세요')
     localStorage.removeItem('GEEK_SSID')
-    localStorage.removeItem('GEEK_SSRID')
     navigate('/login', { replace: true })
   }
 

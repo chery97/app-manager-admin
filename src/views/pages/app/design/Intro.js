@@ -27,7 +27,7 @@ import {
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import intro from 'src/api/app/intro'
+import intro from 'src/api/app'
 import upload from 'src/api/upload'
 
 const Intro = () => {

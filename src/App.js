@@ -84,7 +84,6 @@ const ProtectedRoute = () => {
         setShowModal(true) // 토큰이 없으면 모달 표시
         return
       }
-      const refreshToken = localStorage.getItem('GEEK_SSRID')
 
       const decoded = JSON.parse(atob(accessToken.split('.')[1]))
       let expiresIn = decoded.exp * 1000 - Date.now()
@@ -95,7 +94,6 @@ const ProtectedRoute = () => {
           const { data: newAccessToken } = await authRequest({
             method: 'POST',
             url: '/common/auth/refresh',
-            data: { refreshToken: `${refreshToken}` },
           })
           if (newAccessToken) {
             localStorage.setItem('GEEK_SSID', newAccessToken)

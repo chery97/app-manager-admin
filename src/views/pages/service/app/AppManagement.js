@@ -26,12 +26,6 @@ const AppManagement = () => {
       _style: { width: '6%' },
     },
     {
-      key: 'userType',
-      label: '관리자 타입',
-      _props: { scope: 'col' },
-      _style: { width: '10%' },
-    },
-    {
       key: 'id',
       label: '아이디',
       _props: { scope: 'col' },
@@ -44,16 +38,22 @@ const AppManagement = () => {
       _style: { width: '20%' },
     },
     {
-      key: 'userTel',
-      label: '전화번호',
+      key: 'appName',
+      label: '앱 이름',
       _props: { scope: 'col' },
       _style: { width: '20%' },
     },
     {
-      key: 'userEmail',
-      label: '이메일',
+      key: 'appUrl',
+      label: 'URL',
       _props: { scope: 'col' },
       _style: { width: '20%' },
+    },
+    {
+      key: 'details',
+      label: '상세보기',
+      _props: { scope: 'col' },
+      _style: { width: '8%' },
     },
   ]
   const [items, setItems] = useState([])
@@ -76,11 +76,15 @@ const AppManagement = () => {
       setItems(
         data.items.map((item, index) => ({
           sno: (page - 1) * pageSize + index + 1,
-          userType: item.userType,
           id: item.id,
           userName: item.userName,
-          userTel: item.userTel,
-          userEmail: item.userEmail,
+          appName: '',
+          appUrl: '',
+          details: (
+            <CButton color="light" size="sm" href={`#/service/app/${item.sno}`}>
+              이동
+            </CButton>
+          ),
         })),
       )
       setTotalPages(data.totalPage)

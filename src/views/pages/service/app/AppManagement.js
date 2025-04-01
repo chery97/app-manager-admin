@@ -13,7 +13,7 @@ import {
   CTable,
 } from '@coreui/react'
 import { NavLink, useParams } from 'react-router-dom'
-import user from 'src/api/user'
+import app from 'src/api/app'
 import CIcon from '@coreui/icons-react'
 import { cilSearch } from '@coreui/icons'
 
@@ -71,15 +71,16 @@ const AppManagement = () => {
         searchType: params.searchType ?? '',
         keyword: params.searchKeyword ?? '',
       }
-      const { data } = await user.findAll(queryString)
+
+      const { data } = await app.findAll(queryString)
 
       setItems(
         data.items.map((item, index) => ({
           sno: (page - 1) * pageSize + index + 1,
           id: item.id,
           userName: item.userName,
-          appName: '',
-          appUrl: '',
+          appName: item.appName,
+          appUrl: item.appUrl,
           details: (
             <CButton color="light" size="sm" href={`#/service/app/${item.sno}`}>
               이동
@@ -125,6 +126,7 @@ const AppManagement = () => {
               { label: '선택', value: '', disabled: true },
               { label: 'ID', value: 'id' },
               { label: '업체명', value: 'userName' },
+              { label: '앱 이름', value: 'appName' },
             ]}
             value={searchType}
             onChange={(e) => setSearchType(e.target.value)}

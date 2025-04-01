@@ -21,7 +21,7 @@ const intro = {
       url: '/app/design',
     })
   },
-  findAll: () => {
+  findAll: (query) => {
     let queryString = ''
     if (typeof query !== 'undefined') {
       const queryArray = Object.entries(query)
@@ -33,7 +33,7 @@ const intro = {
     }
     return authRequest({
       method: 'GET',
-      url: `/app?${queryString}`,
+      url: `/app/design?${queryString}`,
     })
   },
 }

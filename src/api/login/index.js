@@ -12,6 +12,7 @@ const login = {
     return authRequest({
       method: 'POST',
       url: '/users/login',
+      withCredentials: true,
       data,
     })
   },

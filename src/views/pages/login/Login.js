@@ -44,10 +44,8 @@ const Login = () => {
   const loginMutation = useMutation({
     mutationFn: FnLogin,
     onSuccess: (data) => {
-      const { access_token, refresh_token } = data
       // [Jay] 엑세스 토큰값 로컬스토리지 저장
-      localStorage.setItem('GEEK_SSID', access_token)
-      localStorage.setItem('GEEK_SSRID', refresh_token)
+      localStorage.setItem('GEEK_SSID', data)
       navigate('/dashboard') // 로그인 성공 시 대시보드로 이동
     },
     onError: (error) => {

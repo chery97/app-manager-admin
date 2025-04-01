@@ -94,6 +94,7 @@ const ProtectedRoute = () => {
           const { data: newAccessToken } = await authRequest({
             method: 'POST',
             url: '/common/auth/refresh',
+            withCredentials: true,
           })
           if (newAccessToken) {
             localStorage.setItem('GEEK_SSID', newAccessToken)

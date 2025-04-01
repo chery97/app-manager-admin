@@ -33,9 +33,10 @@ const intro = {
     }
     return authRequest({
       method: 'GET',
-      url: `/app/design?${queryString}`,
+      url: `/app/app-manager?${queryString}`,
     })
   },
+  register: () => {},
 }
 
 export default intro

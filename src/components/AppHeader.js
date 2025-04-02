@@ -42,7 +42,7 @@ const AppHeader = () => {
       localStorage.removeItem('GEEK_SSID')
       navigate('/login', { replace: true })
     } catch (error) {
-      alert('로그아웃에 정상적으로 되지 않았습니다. 고객센터에 문의해주세요')
+      alert('로그아웃이 정상적으로 되지 않았습니다. 고객센터에 문의해주세요')
       console.log(error)
     }
   }

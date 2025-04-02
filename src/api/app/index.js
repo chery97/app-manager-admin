@@ -15,10 +15,10 @@ const intro = {
       data: params,
     })
   },
-  getIntro: () => {
+  getIntro: (appId) => {
     return authRequest({
       method: 'GET',
-      url: '/app/design',
+      url: `/app/design/intro/${appId}`,
     })
   },
   findAll: (query) => {

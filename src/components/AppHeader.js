@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom'
 import { AppHeaderDropdown } from './header/index'
 import { AppBreadcrumb } from './index'
 import authRequest from 'src/api/core'
+import login from 'src/api/login'
 
 const AppHeader = () => {
   const navigate = useNavigate()
@@ -36,11 +37,7 @@ const AppHeader = () => {
   }, [])
 
   const goLogout = async () => {
-    const result = await authRequest({
-      method: 'POST',
-      url: '/app/users/logout',
-      withCredentials: true,
-    })
+    const result = await login.signOut()
     if (!result) alert('로그아웃에 실패하였습니다. 고객센터에 문의해주세요')
     localStorage.removeItem('GEEK_SSID')
     navigate('/login', { replace: true })

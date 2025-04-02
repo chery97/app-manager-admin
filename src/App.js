@@ -1,25 +1,16 @@
 import React, { Suspense, useEffect, useState } from 'react'
 import { HashRouter, Route, Routes, useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import {
-  CButton,
-  CModal,
-  CModalBody,
-  CModalFooter,
-  CModalHeader,
-  CModalTitle,
-  CSpinner,
-  useColorModes,
-} from '@coreui/react'
+import { CSpinner, useColorModes } from '@coreui/react'
 import './scss/style.scss'
 
 import LoginExpiredModal from 'src/components/common/modal/LoginExpiredModal'
 // We use those styles to show code examples, you should remove them in your application.
 import './scss/examples.scss'
 import { DialogProvider } from 'src/context/Dialogcontext'
-import login from 'src/api/login'
 import authRequest from 'src/api/core'
 import axios from 'axios'
+import login from 'src/api/login'
 
 // Containers
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
@@ -69,32 +60,41 @@ const App = () => {
   )
 }
 
+const refreshAuthRequest = axios.create({
+  baseURL: 'http://localhost:4000', // API 기본 URL 설정
+  timeout: 5000, // 요청 타임아웃 (5초)
+})
+
 // [Jay] 로그인 체크 컴포넌트
 const ProtectedRoute = () => {
   const [showModal, setShowModal] = useState(false)
   const navigate = useNavigate()
 
-  const onCloseModal = () => {
+  const onCloseModal = async () => {
     navigate('/login', { replace: true })
   }
 
   useEffect(() => {
     const accessToken = localStorage.getItem('GEEK_SSID')
-    const decoded = JSON.parse(atob(accessToken.split('.')[1]))
-    let expiresIn = decoded.exp * 1000 - Date.now()
+    let expiresIn
+    if (accessToken) {
+      const decoded = JSON.parse(atob(accessToken.split('.')[1]))
+      expiresIn = decoded.exp * 1000 - Date.now()
+    }
+
     const checkAccessToken = async () => {
       if (!accessToken) {
-        setShowModal(true) // 토큰이 없으면 모달 표시
+        const result = await login.signOut()
+        if (result) {
+          localStorage.removeItem('GEEK_SSID')
+          setShowModal(true) // 토큰이 없으면 모달 표시
+        }
         return
       }
 
       // 토큰 만료 1분 전 미리 갱신 처리
       if (expiresIn < 60 * 1000) {
         try {
-          const refreshAuthRequest = axios.create({
-            baseURL: 'http://localhost:4000', // API 기본 URL 설정
-            timeout: 5000, // 요청 타임아웃 (5초)
-          })
           const { data: newAccessToken } = await refreshAuthRequest({
             method: 'POST',
             url: '/common/auth/refresh',
@@ -107,23 +107,17 @@ const ProtectedRoute = () => {
             const newDecoded = JSON.parse(atob(newAccessToken.split('.')[1]))
             expiresIn = newDecoded.exp * 1000 - Date.now()
           } else {
-            const result = await authRequest({
-              method: 'POST',
-              url: '/app/users/logout',
-              withCredentials: true,
-            })
+            const result = await login.signOut()
             if (result) {
+              localStorage.removeItem('GEEK_SSID')
               console.error('유효하지 않은 RefreshToken', error)
               setShowModal(true)
             }
           }
         } catch (error) {
-          const result = await authRequest({
-            method: 'POST',
-            url: '/app/users/logout',
-            withCredentials: true,
-          })
+          const result = await login.signOut()
           if (result) {
+            localStorage.removeItem('GEEK_SSID')
             console.error('토큰 검증 실패', error)
             setShowModal(true)
           }

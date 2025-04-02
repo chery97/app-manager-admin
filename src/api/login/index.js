@@ -16,6 +16,13 @@ const login = {
       data,
     })
   },
+  signOut: () => {
+    return authRequest({
+      method: 'POST',
+      url: '/app/users/logout',
+      withCredentials: true,
+    })
+  },
   getRefreshToken: (data) => {
     authRequest({
       method: 'POST',

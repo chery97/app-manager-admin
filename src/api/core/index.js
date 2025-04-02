@@ -3,6 +3,7 @@ import config from '@coreui/coreui/js/src/util/config'
 import { useNavigate } from 'react-router-dom'
 import LoginExpiredModal from 'src/components/common/modal/LoginExpiredModal'
 import React from 'react'
+import login from 'src/api/login'
 
 // Axios 인스턴스 생성
 const authRequest = axios.create({
@@ -42,11 +43,7 @@ authRequest.interceptors.request.use(
           <LoginExpiredModal
             isVisible={true}
             onClose={async () => {
-              const result = await authRequest({
-                method: 'POST',
-                url: '/app/users/logout',
-                withCredentials: true,
-              })
+              const result = await login.signOut()
               if (result) {
                 navigate('/login', { replace: true })
               }
@@ -86,11 +83,7 @@ authRequest.interceptors.response.use(
           <LoginExpiredModal
             isVisible={true}
             onClose={async () => {
-              const result = await authRequest({
-                method: 'POST',
-                url: '/app/users/logout',
-                withCredentials: true,
-              })
+              const result = await login.signOut()
               if (result) {
                 navigate('/login', { replace: true })
               }

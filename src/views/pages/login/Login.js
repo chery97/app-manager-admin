@@ -47,9 +47,10 @@ const Login = () => {
       if (!accessToken) return
       try {
         const {
-          data: { statusCode: isAccessToken },
+          data: { isAccessToken },
         } = await login.verifyAccessToken()
-        if (isAccessToken < 400) navigate('/dashboard')
+
+        if (isAccessToken) navigate('/dashboard')
       } catch (error) {
         console.log(error)
         const result = await login.signOut()

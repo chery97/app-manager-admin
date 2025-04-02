@@ -36,9 +36,22 @@ const intro = {
       url: `/app/app-manager?${queryString}`,
     })
   },
-  register: (params) => {
+  findOne: (sno) => {
+    return authRequest({
+      method: 'GET',
+      url: `/app/app-manager/${sno}`,
+    })
+  },
+  registerAppInfo: (params) => {
     return authRequest({
       method: 'POST',
+      url: '/app/app-manager',
+      data: params,
+    })
+  },
+  updateAppInfo: (params) => {
+    return authRequest({
+      method: 'PATCH',
       url: '/app/app-manager',
       data: params,
     })

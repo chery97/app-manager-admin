@@ -28,6 +28,7 @@ const AppRegister = () => {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm()
 
@@ -35,6 +36,22 @@ const AppRegister = () => {
   const [showModal, setShowModal] = useState(false)
   const [modalMsg, setModalMsg] = useState('')
   const [isSuccess, setIsSuccess] = useState(true)
+  const [createdAt, updatedAt, userName] = watch(['createdAt', 'updatedAt', 'userName'])
+
+  const fetchData = async (sno) => {
+    try {
+      const { data } = await app.findOne(Number(sno))
+      reset(data)
+    } catch (error) {
+      console.error('error:', error)
+    }
+  }
+
+  useEffect(() => {
+    if (sno) {
+      fetchData(sno)
+    }
+  }, [sno])
 
   const onSubmitDetail = (data) => {
     if (isEditable) {
@@ -53,9 +70,23 @@ const AppRegister = () => {
   }
 
   const registerMutation = useMutation({
-    mutationFn: async (data) => await app.register(data),
+    mutationFn: async (data) => await app.registerAppInfo(data),
     onSuccess: (data) => {
       setModalMsg('등록이 완료되었습니다.')
+      setIsSuccess(true)
+      setShowModal(true)
+    },
+    onError: (error) => {
+      setModalMsg(error?.response?.data?.message)
+      setIsSuccess(false)
+      setShowModal(true)
+    },
+  })
+
+  const updateMutation = useMutation({
+    mutationFn: async (data) => await app.updateAppInfo(data),
+    onSuccess: (data) => {
+      setModalMsg('수정이 완료되었습니다.')
       setIsSuccess(true)
       setShowModal(true)
     },
@@ -71,6 +102,13 @@ const AppRegister = () => {
       <CCard className="mb-4">
         <CCardHeader className="d-flex align-items-center">
           <strong>{isEditable ? '앱 정보 수정' : '앱 등록'}</strong>
+          {isEditable && (
+            <div className="ms-auto text-end">
+              <small className="text-muted">
+                등록일: {createdAt || '-'} | 최종수정일: {updatedAt || '-'}
+              </small>
+            </div>
+          )}
         </CCardHeader>
         <CForm onSubmit={handleSubmit(onSubmitDetail)}>
           <CCardBody>
@@ -82,7 +120,6 @@ const AppRegister = () => {
                 <CFormInput
                   type="text"
                   {...register('appName', { required: '앱 이름을 입력하세요' })}
-                  readOnly={isEditable}
                 />
                 {errors.appName && <p>{errors.appName.message}</p>}
               </CCol>
@@ -98,10 +135,7 @@ const AppRegister = () => {
               </CCol>
               {isEditable && (
                 <CCol md={6} className="mb-4">
-                  <CFormLabel htmlFor="companyName">
-                    업체명 <span className="text-danger">*</span>
-                  </CFormLabel>
-                  <CFormInput type="text" id="companyName" />
+                  <CFormInput label="업체명" type="text" value={userName} readOnly={isEditable} />
                 </CCol>
               )}
             </CRow>

@@ -36,7 +36,13 @@ const intro = {
       url: `/app/app-manager?${queryString}`,
     })
   },
-  register: () => {},
+  register: (params) => {
+    return authRequest({
+      method: 'POST',
+      url: '/app/app-manager',
+      data: params,
+    })
+  },
 }
 
 export default intro

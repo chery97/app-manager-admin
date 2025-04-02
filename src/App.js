@@ -79,18 +79,17 @@ const ProtectedRoute = () => {
   }
 
   useEffect(() => {
+    const accessToken = localStorage.getItem('GEEK_SSID')
+    const decoded = JSON.parse(atob(accessToken.split('.')[1]))
+    let expiresIn = decoded.exp * 1000 - Date.now()
     const checkAccessToken = async () => {
-      const accessToken = localStorage.getItem('GEEK_SSID')
       if (!accessToken) {
         setShowModal(true) // 토큰이 없으면 모달 표시
         return
       }
 
-      const decoded = JSON.parse(atob(accessToken.split('.')[1]))
-      let expiresIn = decoded.exp * 1000 - Date.now()
-
-      // 토큰 만료 3분 전 미리 갱신 처리
-      if (expiresIn < 3 * 60 * 1000) {
+      // 토큰 만료 1분 전 미리 갱신 처리
+      if (expiresIn < 60 * 1000) {
         try {
           const refreshAuthRequest = axios.create({
             baseURL: 'http://localhost:4000', // API 기본 URL 설정
@@ -108,17 +107,30 @@ const ProtectedRoute = () => {
             const newDecoded = JSON.parse(atob(newAccessToken.split('.')[1]))
             expiresIn = newDecoded.exp * 1000 - Date.now()
           } else {
-            console.error('유효하지 않은 RefreshToken', error)
-            setShowModal(true)
+            const result = await authRequest({
+              method: 'POST',
+              url: '/app/users/logout',
+              withCredentials: true,
+            })
+            if (result) {
+              console.error('유효하지 않은 RefreshToken', error)
+              setShowModal(true)
+            }
           }
         } catch (error) {
-          console.error('토큰 검증 실패', error)
-          setShowModal(true)
+          const result = await authRequest({
+            method: 'POST',
+            url: '/app/users/logout',
+            withCredentials: true,
+          })
+          if (result) {
+            console.error('토큰 검증 실패', error)
+            setShowModal(true)
+          }
         }
       }
-      setTimeout(checkAccessToken, expiresIn - 3 * 60 * 1000)
     }
-    checkAccessToken()
+    setTimeout(checkAccessToken, expiresIn - 60 * 1000)
   }, [])
 
   return (

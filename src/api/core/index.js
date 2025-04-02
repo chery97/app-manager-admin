@@ -41,8 +41,15 @@ authRequest.interceptors.request.use(
         return (
           <LoginExpiredModal
             isVisible={true}
-            onClose={() => {
-              navigate('/login', { replace: true })
+            onClose={async () => {
+              const result = await authRequest({
+                method: 'POST',
+                url: '/app/users/logout',
+                withCredentials: true,
+              })
+              if (result) {
+                navigate('/login', { replace: true })
+              }
             }}
           ></LoginExpiredModal>
         )
@@ -78,8 +85,15 @@ authRequest.interceptors.response.use(
         return (
           <LoginExpiredModal
             isVisible={true}
-            onClose={() => {
-              navigate('/login', { replace: true })
+            onClose={async () => {
+              const result = await authRequest({
+                method: 'POST',
+                url: '/app/users/logout',
+                withCredentials: true,
+              })
+              if (result) {
+                navigate('/login', { replace: true })
+              }
             }}
           ></LoginExpiredModal>
         )

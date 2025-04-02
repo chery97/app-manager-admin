@@ -1,4 +1,4 @@
-import authRequest from '/src/api/core/index'
+import authRequest, { refreshAuthRequest } from '/src/api/core/index'
 
 const login = {
   join: (data) => {
@@ -23,11 +23,17 @@ const login = {
       withCredentials: true,
     })
   },
-  getRefreshToken: (data) => {
-    authRequest({
+  renewAccessToken: () => {
+    return refreshAuthRequest({
       method: 'POST',
-      url: '/auth/refresh',
-      data,
+      url: '/common/auth/refresh',
+      withCredentials: true,
+    })
+  },
+  verifyAccessToken: () => {
+    return authRequest({
+      method: 'POST',
+      url: '/common/auth/token-check',
     })
   },
 }

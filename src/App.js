@@ -60,11 +60,6 @@ const App = () => {
   )
 }
 
-const refreshAuthRequest = axios.create({
-  baseURL: 'http://localhost:4000', // API 기본 URL 설정
-  timeout: 5000, // 요청 타임아웃 (5초)
-})
-
 // [Jay] 로그인 체크 컴포넌트
 const ProtectedRoute = () => {
   const [showModal, setShowModal] = useState(false)
@@ -95,11 +90,7 @@ const ProtectedRoute = () => {
       // 토큰 만료 1분 전 미리 갱신 처리
       if (expiresIn < 60 * 1000) {
         try {
-          const { data: newAccessToken } = await refreshAuthRequest({
-            method: 'POST',
-            url: '/common/auth/refresh',
-            withCredentials: true,
-          })
+          const { data: newAccessToken } = await login.renewAccessToken()
           if (newAccessToken) {
             localStorage.setItem('GEEK_SSID', newAccessToken)
 

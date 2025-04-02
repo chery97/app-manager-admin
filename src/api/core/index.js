@@ -11,7 +11,7 @@ const authRequest = axios.create({
   timeout: 5000, // 요청 타임아웃 (5초)
 })
 
-const refreshAuthRequest = axios.create({
+export const refreshAuthRequest = axios.create({
   baseURL: 'http://localhost:4000', // API 기본 URL 설정
   timeout: 5000, // 요청 타임아웃 (5초)
 })
@@ -29,11 +29,7 @@ authRequest.interceptors.request.use(
 
     // 토큰만료 시 새 토큰 발급
     if (accessToken && isTokenExpired(accessToken)) {
-      const { data: newAccessToken } = await refreshAuthRequest({
-        method: 'POST',
-        url: '/common/auth/refresh',
-        withCredentials: true,
-      })
+      const { data: newAccessToken } = await login.renewAccessToken()
       if (newAccessToken) {
         localStorage.setItem('GEEK_SSID', newAccessToken)
         accessToken = newAccessToken
@@ -70,11 +66,7 @@ authRequest.interceptors.response.use(
     const accessToken = localStorage.getItem('GEEK_SSID')
     if (accessToken && error.response && error.response.status === 401) {
       // 만료 토큰 갱신
-      const { data: newAccessToken } = await refreshAuthRequest({
-        method: 'POST',
-        url: '/common/auth/refresh',
-        withCredentials: true,
-      })
+      const { data: newAccessToken } = await login.renewAccessToken()
       if (newAccessToken) {
         localStorage.setItem('GEEK_SSID', newAccessToken)
       } else {

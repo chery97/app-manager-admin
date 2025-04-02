@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   CButton,
@@ -40,6 +40,26 @@ const Login = () => {
     const response = await login.signIn(userData)
     return response.data
   }
+
+  useEffect(() => {
+    const verifyAccessToken = async () => {
+      const accessToken = localStorage.getItem('GEEK_SSID')
+      if (!accessToken) return
+      try {
+        const {
+          data: { statusCode: isAccessToken },
+        } = await login.verifyAccessToken()
+        if (isAccessToken < 400) navigate('/dashboard')
+      } catch (error) {
+        console.log(error)
+        const result = await login.signOut()
+        if (result) {
+          localStorage.removeItem('GEEK_SSID')
+        }
+      }
+    }
+    verifyAccessToken()
+  }, [])
 
   const loginMutation = useMutation({
     mutationFn: FnLogin,

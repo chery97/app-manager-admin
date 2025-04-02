@@ -37,10 +37,14 @@ const AppHeader = () => {
   }, [])
 
   const goLogout = async () => {
-    const result = await login.signOut()
-    if (!result) alert('로그아웃에 실패하였습니다. 고객센터에 문의해주세요')
-    localStorage.removeItem('GEEK_SSID')
-    navigate('/login', { replace: true })
+    try {
+      await login.signOut()
+      localStorage.removeItem('GEEK_SSID')
+      navigate('/login', { replace: true })
+    } catch (error) {
+      alert('로그아웃에 정상적으로 되지 않았습니다. 고객센터에 문의해주세요')
+      console.log(error)
+    }
   }
 
   return (

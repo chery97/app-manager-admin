@@ -46,10 +46,7 @@ const Login = () => {
       const accessToken = localStorage.getItem('GEEK_SSID')
       if (!accessToken) return
       try {
-        const {
-          data: { isAccessToken },
-        } = await login.verifyAccessToken()
-
+        const { data: isAccessToken } = await login.verifyAccessToken()
         if (isAccessToken) navigate('/dashboard')
       } catch (error) {
         console.log(error)

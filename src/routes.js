@@ -60,6 +60,7 @@ const PartnerRegister = React.lazy(() => import('./views/pages/service/partner/P
 const App = React.lazy(() => import('./views/pages/service/app/AppManagement'))
 const AppRegister = React.lazy(() => import('./views/pages/service/app/AppRegister'))
 const AppIntro = React.lazy(() => import('./views/pages/app/design/Intro'))
+const Footer = React.lazy(() => import('./views/pages/app/design/Footer'))
 
 // app
 const Send = React.lazy(() => import('./views/pages/app/push/Send'))
@@ -124,6 +125,7 @@ const routes = [
   // app
   { path: '/app/push/send', name: 'app push send', element: Send },
   { path: '/app/design/intro', name: 'app design intro', element: AppIntro },
+  { path: '/app/design/footer', name: 'app design footer', element: Footer },
 ]
 
 export default routes

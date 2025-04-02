@@ -7,6 +7,7 @@ const PATHS = {
   APPLICATION: {
     APP_DESIGN: {
       INTRO: '/app/design/intro',
+      FOOTER: '/app/design/footer',
     },
     APP_PUSH: {
       SEND: '/app/push/send',

@@ -17,7 +17,7 @@ import {
   CModalTitle,
   CRow,
 } from '@coreui/react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useMutation } from '@tanstack/react-query'
 import app from 'src/api/app'
@@ -33,7 +33,9 @@ const AppRegister = () => {
   } = useForm()
 
   const isEditable = !!sno
+  const navigate = new useNavigate()
   const [showModal, setShowModal] = useState(false)
+  const [isAccessDenied, setIsAccessDenied] = useState(false)
   const [modalMsg, setModalMsg] = useState('')
   const [originalData, setOriginalData] = useState(null)
   const [isSuccess, setIsSuccess] = useState(true)
@@ -42,6 +44,12 @@ const AppRegister = () => {
   const fetchData = async (sno) => {
     try {
       const { data } = await app.findOne(Number(sno))
+      if (data.status && data.status === 404) {
+        setIsAccessDenied(true)
+        setModalMsg('해당 데이터에 대한 접근 권한이 없습니다.')
+        setShowModal(true)
+        return
+      }
       reset(data)
       setOriginalData(data)
     } catch (error) {
@@ -180,7 +188,11 @@ const AppRegister = () => {
             color="secondary"
             onClick={() => {
               setShowModal(false)
-              window.location.reload()
+              if (isAccessDenied) {
+                navigate('/service/app')
+              } else {
+                window.location.reload()
+              }
             }}
           >
             닫기

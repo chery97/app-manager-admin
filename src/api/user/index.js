@@ -30,6 +30,12 @@ const user = {
     })
     return result
   },
+  getSummary: async () => {
+    return await authRequest({
+      method: 'GET',
+      url: '/app/users/summary',
+    })
+  },
 }
 
 export default user

@@ -12,7 +12,7 @@ import {
   CHeaderToggler,
   useColorModes,
 } from '@coreui/react'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
@@ -20,6 +20,7 @@ import { AppHeaderDropdown } from './header/index'
 import { AppBreadcrumb } from './index'
 import authRequest from 'src/api/core'
 import login from 'src/api/login'
+import user from 'src/api/user'
 
 const AppHeader = () => {
   const navigate = useNavigate()
@@ -29,11 +30,27 @@ const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
 
+  const [userId, setUserId] = useState('')
+  const [userType, setUserType] = useState('')
+
   useEffect(() => {
     document.addEventListener('scroll', () => {
       headerRef.current &&
         headerRef.current.classList.toggle('shadow-sm', document.documentElement.scrollTop > 0)
     })
+  }, [])
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const { data } = await user.getSummary()
+        setUserId(data.id)
+        setUserType(data.userType === 'admin' ? '관리자' : '파트너')
+      } catch (error) {
+        console.error('error', error)
+      }
+    }
+    fetchData()
   }, [])
 
   const goLogout = async () => {
@@ -59,6 +76,9 @@ const AppHeader = () => {
         <CHeaderNav className="d-none d-md-flex"></CHeaderNav>
         <CHeaderNav className="ms-auto" />
         <CHeaderNav className="d-flex align-items-center gap-3">
+          <span className="text-body-secondary">
+            {userId} ({userType})
+          </span>
           <CDropdown
             variant="nav-item"
             placement="bottom-end"

@@ -36,11 +36,20 @@ const intro = {
       url: `/app/app-manager?${queryString}`,
     })
   },
-  findOne: (sno) => {
-    return authRequest({
-      method: 'GET',
-      url: `/app/app-manager/${sno}`,
-    })
+  findOne: async (sno) => {
+    try {
+      const response = await authRequest({
+        method: 'GET',
+        url: `/app/app-manager/${sno}`,
+      })
+      return response
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        const status = error.response.status
+        return { data: { status } }
+      }
+      throw error
+    }
   },
   registerAppInfo: (params) => {
     return authRequest({

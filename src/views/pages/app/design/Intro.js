@@ -111,9 +111,8 @@ const Intro = () => {
     } else {
       refetch().then(({ data }) => {
         setDesignIntro(() => ({
-          appId: data?.appId,
           mobileImgUrl: data?.mobileImgUrl,
-          tabletImgUrl: data?.tabletImgUrl,
+          tabletImgUrl: data?.tabletImgUrl ?? null,
         }))
         setValue('mobileImgUrlText', data?.mobileImgUrl)
         setValue('tabletImgUrlText', data?.tabletImgUrl)
@@ -138,7 +137,7 @@ const Intro = () => {
 
   const onSubmit = (formData) => {
     introMutation.mutate({
-      appId: designIntro.appId,
+      appId: selectedApp,
       mobileImgUrl: formData.mobileImgUrl,
       tabletImgUrl: formData.tabletImgUrl,
       duration: Number(formData.duration),

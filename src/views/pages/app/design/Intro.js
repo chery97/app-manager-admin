@@ -33,17 +33,26 @@ import { useDialog } from 'src/context/Dialogcontext'
 import { useNavigate } from 'react-router-dom'
 
 const Intro = () => {
-  const [designIntro, setDesignIntro] = useState({
+  const defaultValues = {
     appId: '',
     duration: '',
     mobileImgUrl: '',
     mobileImgUrlText: '',
     tabletImgUrl: '',
     tabletImgUrlText: '',
+  }
+
+  const introStateDefaultValues = {
+    appId: '',
+    duration: '',
+    mobileImgUrl: '',
+    tabletImgUrl: '',
+  }
+  const [designIntro, setDesignIntro] = useState({
+    ...introStateDefaultValues,
   })
   const mobileFileInputRef = useRef(null)
   const tableFileInputRef = useRef(null)
-
   const navigate = useNavigate()
 
   const {
@@ -51,8 +60,11 @@ const Intro = () => {
     handleSubmit, // 폼 제출 핸들러
     setValue,
     watch, // 현재 입력값을 추적
+    reset,
     formState: { errors }, // 입력값 검증 에러 관리
-  } = useForm()
+  } = useForm({
+    defaultValues,
+  })
 
   const { confirm } = useDialog()
 
@@ -63,8 +75,7 @@ const Intro = () => {
     })
   }
 
-  const selectedApp = watch('app', '') // 앱 기본 선택값을 빈 값으로 설정
-  const selectedDuration = watch('duration', '') // 지속시간 기본 선택값을 빈 값으로 설정
+  const selectedApp = watch('appId', '') // 앱 기본 선택값을 빈 값으로 설정
 
   const createIntro = async (data) => {
     const result = await intro.create(data)
@@ -95,7 +106,8 @@ const Intro = () => {
   // 앱선택시 refetch 실행
   useEffect(() => {
     if (selectedApp === '') {
-      // setTabList([]) // 디폴트 선택시 빈 배열 설정
+      reset()
+      setDesignIntro({ ...introStateDefaultValues })
     } else {
       refetch().then(({ data }) => {
         setDesignIntro(() => ({
@@ -109,13 +121,6 @@ const Intro = () => {
       }) // selectedApp 변경 후 API 재호출
     }
   }, [selectedApp])
-
-  useEffect(() => {
-    setDesignIntro((prevState) => ({
-      ...prevState,
-      duration: selectedDuration,
-    }))
-  }, [selectedDuration])
 
   const introMutation = useMutation({
     mutationFn: introData ? updateIntro : createIntro,
@@ -140,8 +145,15 @@ const Intro = () => {
     })
   }
 
+  const onError = (errors) => {
+    if (Object.values(errors).length > 0) {
+      handleModal({ message: Object.values(errors)[0].message }) // 오류 메시지에 대한 alert 발생
+    }
+  }
+
   const imageUpload = async (e) => {
     const file = e.target.files?.[0]
+
     if (!file) return
 
     const fileType = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'] // 허용할 이미지 타입
@@ -158,25 +170,8 @@ const Intro = () => {
       alert('파일 크기가 5MB를 초과합니다.')
       return
     }
-
     // 미리보기
     const reader = new FileReader()
-    if (e.target.id === 'mobileImgUrl') {
-      // reader.onloadend = () => setShowMobileImage(reader.result)
-      reader.onloadend = () =>
-        setDesignIntro((prevState) => ({
-          ...prevState,
-          mobileImgUrl: reader.result,
-        }))
-    } else {
-      // reader.onloadend = () => setShowTabletImage(reader.result)
-      reader.onloadend = () =>
-        setDesignIntro((prevState) => ({
-          ...prevState,
-          tabletImgUrl: reader.result,
-        }))
-    }
-
     reader.readAsDataURL(file)
 
     const formData = new FormData()
@@ -188,18 +183,18 @@ const Intro = () => {
 
       if (res.data?.filePath) {
         if (e.target.id === 'mobileImgUrl') {
+          setValue('mobileImgUrl', res.data.filePath)
           setValue('mobileImgUrlText', res.data.filePath)
           setDesignIntro((prevState) => ({
             ...prevState,
             mobileImgUrl: res.data.filePath,
-            mobileImgUrlText: res.data.filePath,
           }))
         } else {
+          setValue('tabletImgUrl', res.data.filePath)
           setValue('tabletImgUrlText', res.data.filePath)
           setDesignIntro((prevState) => ({
             ...prevState,
             tabletImgUrl: res.data.filePath,
-            tabletImgUrlText: res.data.filePath,
           }))
         }
       } else {
@@ -294,7 +289,7 @@ const Intro = () => {
             </CTabs>
           </CCol>
           <CCol className="w-25 mx-4">
-            <CForm id="introForm" onSubmit={handleSubmit(onSubmit)}>
+            <CForm id="introForm" onSubmit={handleSubmit(onSubmit, onError)}>
               <CInputGroup>
                 <CContainer>
                   <CRow className="border-bottom">
@@ -303,15 +298,19 @@ const Intro = () => {
                     </CCol>
                     <CCol md={6} className="d-flex align-items-center">
                       <CFormSelect
+                        id="appId"
                         aria-label="Default select example"
+                        {...register('appId', {
+                          required: '앱을 선택해주세요',
+                        })}
                         options={[
-                          { label: '앱선택', value: '' },
+                          { label: '선택', value: '' },
                           { label: 'One', value: '1' },
                           { label: 'Two', value: '2' },
                         ]}
                         onChange={(e) => {
                           const newValue = e.target.value
-                          setValue('app', newValue, { shouldValidate: true }) // 값 설정 + 검증 트리거
+                          setValue('appId', newValue, { shouldValidate: true }) // 값 설정 + 검증 트리거
 
                           if (newValue === '') {
                           }
@@ -356,11 +355,6 @@ const Intro = () => {
                             </CButton>
                           </CCol>
                         </>
-                        {errors?.mobileImgUrlText && (
-                          <p className="text-danger" style={{ fontSize: 14 }}>
-                            {errors?.mobileImgUrlText?.message}
-                          </p>
-                        )}
                       </CRow>
                       <CRow className="border-bottom">
                         <>
@@ -397,11 +391,6 @@ const Intro = () => {
                             </CButton>
                           </CCol>
                         </>
-                        {errors?.tabletImgUrlText && (
-                          <p className="text-danger" style={{ fontSize: 14 }}>
-                            {errors?.tabletImgUrlText?.message}
-                          </p>
-                        )}
                       </CRow>
                       <CRow className="border-bottom">
                         <CCol md={5} className="p-2 d-flex align-items-center">
@@ -422,11 +411,9 @@ const Intro = () => {
                               { label: '4s', value: '4' },
                               { label: '5s', value: '5' },
                             ]}
-                            {...(designIntro && designIntro.duration === ''
-                              ? {}
-                              : register('duration', {
-                                  required: '지속시간을 설정해주세요.',
-                                }))}
+                            {...register('duration', {
+                              required: '지속시간을 업로드해주세요.',
+                            })}
                           />
                         </CCol>
                       </CRow>

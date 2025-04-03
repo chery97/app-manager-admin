@@ -153,7 +153,12 @@ const AppRegister = () => {
               </CCol>
               {isEditable && (
                 <CCol md={6} className="mb-4">
-                  <CFormInput label="업체명" type="text" value={userName} readOnly={isEditable} />
+                  <CFormInput
+                    label="업체명"
+                    type="text"
+                    value={userName || ''}
+                    readOnly={isEditable}
+                  />
                 </CCol>
               )}
             </CRow>

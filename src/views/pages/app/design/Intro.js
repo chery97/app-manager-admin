@@ -45,8 +45,8 @@ const Intro = () => {
   const introStateDefaultValues = {
     appId: '',
     duration: '',
-    mobileImgUrl: '',
-    tabletImgUrl: '',
+    mobileImgUrl: null,
+    tabletImgUrl: null,
   }
   const [designIntro, setDesignIntro] = useState({
     ...introStateDefaultValues,

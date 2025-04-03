@@ -66,26 +66,10 @@ const _nav = [
   },
   {
     component: CNavGroup,
-    name: '앱 푸시',
+    name: '푸시 설정',
     to: '/app/push',
     icon: <CIcon icon={cilBell} customClassName="nav-icon" />,
     items: [
-      {
-        component: CNavGroup,
-        name: '디자인',
-        items: [
-          {
-            component: CNavItem,
-            name: '인트로',
-            to: PATHS.APPLICATION.APP_DESIGN.INTRO,
-          },
-          {
-            component: CNavItem,
-            name: '하단탭',
-            to: PATHS.APPLICATION.APP_DESIGN.FOOTER,
-          },
-        ],
-      },
       {
         component: CNavItem,
         name: '푸시발송',
@@ -95,6 +79,24 @@ const _nav = [
         component: CNavItem,
         name: '내역조회',
         to: PATHS.APPLICATION.APP_PUSH.HISTORY,
+      },
+    ],
+  },
+  {
+    component: CNavGroup,
+    name: '디자인 설정',
+    to: '/app/design',
+    icon: <CIcon icon={cilBell} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: '인트로',
+        to: PATHS.APPLICATION.APP_DESIGN.INTRO,
+      },
+      {
+        component: CNavItem,
+        name: '하단탭',
+        to: PATHS.APPLICATION.APP_DESIGN.FOOTER,
       },
     ],
   },

@@ -17,7 +17,7 @@ import app from 'src/api/app'
 import CIcon from '@coreui/icons-react'
 import { cilSearch } from '@coreui/icons'
 
-const AppManagement = () => {
+const AppManagement = ({ userNo }) => {
   const columns = [
     {
       key: 'sno',
@@ -70,6 +70,7 @@ const AppManagement = () => {
         page: params.page,
         searchType: params.searchType ?? '',
         keyword: params.searchKeyword ?? '',
+        userNo: userNo ?? '',
       }
 
       const { data } = await app.findAll(queryString)

@@ -25,6 +25,7 @@ import {
 } from '@coreui/react'
 import user from 'src/api/user'
 import login from 'src/api/login'
+import AppManagement from 'src/views/pages/service/app/AppManagement'
 
 const PartnerRegister = () => {
   const { sno } = useParams()
@@ -39,6 +40,7 @@ const PartnerRegister = () => {
   const [activeTab, setActiveTab] = React.useState('detail')
   const [showModal, setShowModal] = useState(false)
   const [modalMsg, setModalMsg] = useState('')
+  const [userType, setUserType] = useState('partner')
   const [isSuccess, setIsSuccess] = useState(true)
 
   const handleTabChange = (tab) => {
@@ -48,6 +50,7 @@ const PartnerRegister = () => {
   const fetchData = async (sno) => {
     try {
       const { data } = await user.findOne(Number(sno))
+      setUserType(data.userType)
       reset(data)
     } catch (error) {
       console.error('error:', error)
@@ -121,9 +124,11 @@ const PartnerRegister = () => {
           <CTab itemKey="detail">
             <strong>{isEditable ? '파트너 수정' : '파트너 등록'}</strong>
           </CTab>
-          <CTab itemKey="app">
-            <strong>앱 관리</strong>
-          </CTab>
+          {userType === 'partner' && (
+            <CTab itemKey="app">
+              <strong>앱 관리</strong>
+            </CTab>
+          )}
         </CTabList>
         <CTabContent>
           <CTabPanel className="p-2" itemKey="detail">
@@ -202,35 +207,7 @@ const PartnerRegister = () => {
             </CForm>
           </CTabPanel>
           <CTabPanel className="p-2" itemKey="app">
-            <CForm className="row g-3" onSubmit={handleSubmit(onSubmitApp)}>
-              <CCard className="p-0">
-                <CCardBody>
-                  <CCol className="bg-dark p-3" xs={12} md={6}>
-                    <CRow>
-                      <CCol>
-                        <CFormInput label="아이디" style={{ width: '100%' }} readOnly />
-                      </CCol>
-                      <CCol>
-                        <CFormInput type="text" label="이름" style={{ width: '100%' }} />
-                      </CCol>
-                      <CCol>
-                        <CFormInput
-                          label="연락처"
-                          placeholder="01012345678"
-                          style={{ width: '100%' }}
-                        />
-                      </CCol>
-                    </CRow>
-                  </CCol>
-                  <CCol className="bg-dark p-3"></CCol>
-                </CCardBody>
-                <CCardFooter className="text-end">
-                  <CButton type="submit" color="primary">
-                    {isEditable ? '수정' : '등록'}
-                  </CButton>
-                </CCardFooter>
-              </CCard>
-            </CForm>
+            <AppManagement userNo={sno} />
           </CTabPanel>
         </CTabContent>
       </CTabs>

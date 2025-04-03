@@ -35,6 +35,7 @@ const AppRegister = () => {
   const isEditable = !!sno
   const [showModal, setShowModal] = useState(false)
   const [modalMsg, setModalMsg] = useState('')
+  const [originalData, setOriginalData] = useState(null)
   const [isSuccess, setIsSuccess] = useState(true)
   const [createdAt, updatedAt, userName] = watch(['createdAt', 'updatedAt', 'userName'])
 
@@ -42,6 +43,7 @@ const AppRegister = () => {
     try {
       const { data } = await app.findOne(Number(sno))
       reset(data)
+      setOriginalData(data)
     } catch (error) {
       console.error('error:', error)
     }
@@ -53,9 +55,25 @@ const AppRegister = () => {
     }
   }, [sno])
 
+  const isDataChanged = (data) => {
+    if (!originalData) return true
+    return (
+      data.appName !== originalData.appName ||
+      data.appUrl !== originalData.appUrl ||
+      data.appDesc !== originalData.appDesc
+    )
+  }
+
   const onSubmitDetail = (data) => {
     if (isEditable) {
+      if (!isDataChanged(data)) {
+        setModalMsg('변경 사항이 없습니다.')
+        setIsSuccess(false)
+        setShowModal(true)
+        return
+      }
       updateMutation.mutate({
+        sno: sno,
         appName: data.appName,
         appUrl: data.appUrl,
         appDesc: data.appDesc,

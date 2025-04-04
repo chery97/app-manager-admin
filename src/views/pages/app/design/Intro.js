@@ -302,9 +302,11 @@ const Intro = () => {
             <CForm id="introForm" onSubmit={handleSubmit(onSubmit, onError)}>
               <CInputGroup>
                 <CContainer>
-                  <CRow className="border-bottom">
+                  <CRow>
                     <CCol md={5} className="p-2 d-flex align-items-center">
-                      <CFormLabel htmlFor="mobileImgUrl">앱 선택</CFormLabel>
+                      <CFormLabel className="col-form-label" htmlFor="mobileImgUrl">
+                        앱 선택
+                      </CFormLabel>
                     </CCol>
                     <CCol md={6} className="d-flex align-items-center">
                       <CFormSelect
@@ -326,112 +328,117 @@ const Intro = () => {
                       />
                     </CCol>
                   </CRow>
+                  <CRow className="mt-lg-5 d-flex flex-column border-bottom">
+                    <CCol>
+                      <p className="text-warning mb-0">&#8251; 이미지 업로드시 주의사항</p>
+                      <p style={{ fontSize: '15px' }}>
+                        표기된 이미지 사이즈에 맞춰 업로드해주시기 바랍니다.
+                      </p>
+                    </CCol>
+                  </CRow>
                   {selectedApp && (
                     <>
-                      <CRow className="border-bottom">
-                        <>
-                          <CCol md={5} className="p-2 d-flex align-items-center">
-                            <CFormLabel htmlFor="mobileImgUrl">
-                              모바일 이미지 업로드 (320 x 640)
-                            </CFormLabel>
+                      <CRow
+                        className="pt-2 pb-2 align-items-center"
+                        style={{ justifyContent: 'center' }}
+                      >
+                        <CRow>
+                          <>
+                            <CCol sm={6} className="p-2 d-flex align-items-center">
+                              <CFormLabel htmlFor="mobileImgUrl">
+                                모바일 이미지 업로드 (320 x 640)
+                              </CFormLabel>
+                            </CCol>
+                            <CCol sm={6} className="d-flex align-items-center">
+                              <CFormInput
+                                type="text"
+                                id="mobileImgUrlText"
+                                {...register('mobileImgUrlText', {
+                                  required: '모바일 이미지를 업로드해주세요.',
+                                })}
+                                placeholder="선택된 파일 없음"
+                                readOnly
+                                className="me-2"
+                              />
+                              <CFormInput
+                                type="file"
+                                id="mobileImgUrl"
+                                onChange={imageUpload}
+                                ref={mobileFileInputRef}
+                                style={{ display: 'none' }}
+                              />
+                              <CButton
+                                type="button"
+                                onClick={() => mobileFileInputRef.current.click()}
+                                color="primary"
+                                style={{ width: '130px', whiteSpace: 'nowrap' }}
+                              >
+                                파일 선택
+                              </CButton>
+                            </CCol>
+                          </>
+                        </CRow>
+                        <CRow>
+                          <>
+                            <CCol sm={6} className="p-2 d-flex align-items-center">
+                              <CFormLabel htmlFor="tabletImgUrl">
+                                테블릿 이미지 업로드 (510 x 680)
+                              </CFormLabel>
+                            </CCol>
+                            <CCol sm={6} className="d-flex align-items-center">
+                              <CFormInput
+                                type="text"
+                                id="tabletImgUrlText"
+                                {...register('tabletImgUrlText', {
+                                  required: '태블릿 이미지를 업로드해주세요.',
+                                })}
+                                placeholder="선택된 파일 없음"
+                                readOnly
+                                className="me-2"
+                              />
+                              <CFormInput
+                                type="file"
+                                id="tabletImgUrl"
+                                onChange={imageUpload}
+                                ref={tableFileInputRef}
+                                style={{ display: 'none' }}
+                              />
+                              <CButton
+                                type="button"
+                                onClick={() => tableFileInputRef.current.click()}
+                                color="primary"
+                                style={{ width: '130px', whiteSpace: 'nowrap' }}
+                              >
+                                파일 선택
+                              </CButton>
+                            </CCol>
+                          </>
+                        </CRow>
+                        <CRow>
+                          <CCol sm={6} className="p-2 d-flex align-items-center">
+                            <CFormLabel htmlFor="duration">지속시간</CFormLabel>
                           </CCol>
-                          <CCol md={6} className="d-flex align-items-center">
-                            <CFormInput
-                              type="text"
-                              id="mobileImgUrlText"
-                              {...register('mobileImgUrlText', {
-                                required: '모바일 이미지를 업로드해주세요.',
-                              })}
-                              placeholder="선택된 파일 없음"
-                              readOnly
-                              className="me-2"
-                            />
-                            <CFormInput
-                              type="file"
-                              id="mobileImgUrl"
-                              onChange={imageUpload}
-                              ref={mobileFileInputRef}
-                              style={{ display: 'none' }}
-                            />
-                            <CButton
-                              type="button"
-                              onClick={() => mobileFileInputRef.current.click()}
-                              color="primary"
-                              style={{ width: '130px', whiteSpace: 'nowrap' }}
-                            >
-                              파일 선택
-                            </CButton>
-                          </CCol>
-                        </>
-                      </CRow>
-                      <CRow className="border-bottom">
-                        <>
-                          <CCol md={5} className="p-2 d-flex align-items-center">
-                            <CFormLabel htmlFor="tabletImgUrl">
-                              테블릿 이미지 업로드 (510 x 680)
-                            </CFormLabel>
-                          </CCol>
-                          <CCol md={6} className="d-flex align-items-center">
-                            <CFormInput
-                              type="text"
-                              id="tabletImgUrlText"
-                              {...register('tabletImgUrlText', {
-                                required: '태블릿 이미지를 업로드해주세요.',
-                              })}
-                              placeholder="선택된 파일 없음"
-                              readOnly
-                              className="me-2"
-                            />
-                            <CFormInput
-                              type="file"
-                              id="tabletImgUrl"
-                              onChange={imageUpload}
-                              ref={tableFileInputRef}
-                              style={{ display: 'none' }}
-                            />
-                            <CButton
-                              type="button"
-                              onClick={() => tableFileInputRef.current.click()}
-                              color="primary"
-                              style={{ width: '130px', whiteSpace: 'nowrap' }}
-                            >
-                              파일 선택
-                            </CButton>
-                          </CCol>
-                        </>
-                      </CRow>
-                      <CRow className="border-bottom">
-                        <CCol md={5} className="p-2 d-flex align-items-center">
-                          <CFormLabel htmlFor="duration">지속시간</CFormLabel>
-                        </CCol>
 
-                        <CCol md={4} className="d-flex align-items-center">
-                          <CFormSelect
-                            type="select"
-                            id="duration"
-                            onChange={(e) => {
-                              // setDesignIntro((data) => ({ duration: e.target.value }))
-                              setValue('duration', e.target.value, { shouldValidate: true })
-                            }} // 변경 시 상태 업데이트
-                            options={[
-                              { label: '선택', value: '', disabled: true },
-                              { label: '3s', value: '3' },
-                              { label: '4s', value: '4' },
-                              { label: '5s', value: '5' },
-                            ]}
-                            {...register('duration', {
-                              required: '지속시간을 선택해주세요.',
-                            })}
-                          />
-                        </CCol>
-                      </CRow>
-                      <CRow className="mt-lg-5 d-flex flex-column">
-                        <CCol>
-                          <p className="text-warning">&#8251; 이미지 업로드시 주의사항</p>
-                          <p style={{ fontSize: '15px' }}>
-                            - 표기된 이미지 사이즈에 맞춰 업로드해주시기 바랍니다.
-                          </p>
-                        </CCol>
+                          <CCol sm={6} className="d-flex align-items-center">
+                            <CFormSelect
+                              type="select"
+                              id="duration"
+                              onChange={(e) => {
+                                // setDesignIntro((data) => ({ duration: e.target.value }))
+                                setValue('duration', e.target.value, { shouldValidate: true })
+                              }} // 변경 시 상태 업데이트
+                              options={[
+                                { label: '선택', value: '', disabled: true },
+                                { label: '3s', value: '3' },
+                                { label: '4s', value: '4' },
+                                { label: '5s', value: '5' },
+                              ]}
+                              {...register('duration', {
+                                required: '지속시간을 선택해주세요.',
+                              })}
+                            />
+                          </CCol>
+                        </CRow>
                       </CRow>
                     </>
                   )}

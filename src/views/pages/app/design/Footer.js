@@ -317,32 +317,36 @@ const Footer = () => {
               <CInputGroup>
                 <CContainer>
                   <CRow>
-                    <CFormLabel className="col-sm-2 col-form-label">앱 선택</CFormLabel>
-                    <CFormSelect
-                      id="app"
-                      aria-label="Default select example"
-                      {...register('app', {
-                        required: '앱을 선택해주세요',
-                      })}
-                      options={[
-                        { label: '선택', value: '' },
-                        ...(Array.isArray(appList)
-                          ? appList.map((app) => ({ label: app.appName, value: app.sno }))
-                          : []),
-                      ]}
-                      value={selectedApp}
-                      onChange={(e) => {
-                        const newValue = e.target.value
-                        setValue('app', newValue, { shouldValidate: true }) // 값 설정 + 검증 트리거
+                    <CCol md={5} className="p-2 d-flex align-items-center">
+                      <CFormLabel className="col-form-label">앱 선택</CFormLabel>
+                    </CCol>
+                    <CCol md={6} className="d-flex align-items-center">
+                      <CFormSelect
+                        id="app"
+                        aria-label="Default select example"
+                        {...register('app', {
+                          required: '앱을 선택해주세요',
+                        })}
+                        options={[
+                          { label: '선택', value: '' },
+                          ...(Array.isArray(appList)
+                            ? appList.map((app) => ({ label: app.appName, value: app.sno }))
+                            : []),
+                        ]}
+                        value={selectedApp}
+                        onChange={(e) => {
+                          const newValue = e.target.value
+                          setValue('app', newValue, { shouldValidate: true }) // 값 설정 + 검증 트리거
 
-                        if (newValue === '') {
-                          setTabList([]) // 디폴트 선택시 빈 배열 설정
-                        }
-                      }}
-                    />
+                          if (newValue === '') {
+                            setTabList([]) // 디폴트 선택시 빈 배열 설정
+                          }
+                        }}
+                      />
+                    </CCol>
                   </CRow>
                   <CRow
-                    className="d-flex mt-lg-5 h-auto align-items-center"
+                    className="d-flex mt-lg-5 h-auto align-items-center border-bottom"
                     style={{ justifyContent: 'space-between' }}
                   >
                     <CRow className="d-flex flex-column w-75">

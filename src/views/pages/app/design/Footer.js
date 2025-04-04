@@ -347,105 +347,111 @@ const Footer = () => {
                     </CRow>
                   </CRow>
 
-                  {tabList?.map((input, index) => (
-                    <div key={input.id} className="d-flex">
-                      <CRow className="border-bottom pt-2 pb-2 align-items-center">
-                        <CRow style={{ width: '85%' }}>
-                          <CRow className="d-flex flex-md-row flex-column">
-                            <CFormLabel
-                              htmlFor={`label-${input.id}`}
-                              className="col-sm-3 col-form-label"
-                            >
-                              탭 이름
-                            </CFormLabel>
-                            <CCol sm={3}>
-                              <CFormInput
-                                type="text"
-                                id={`label-${input.id}`}
-                                value={input.label}
-                                onChange={(e) => {
-                                  const newValue = e.target.value
-                                  setTabList((prevTabList) =>
-                                    prevTabList.map((item) =>
-                                      item.id === input.id ? { ...item, label: newValue } : item,
-                                    ),
-                                  )
-                                }}
-                                onBlur={(e) => handleBlur('label', input.id, e.target.value)}
-                              />
-                            </CCol>
-                          </CRow>
-                          <CRow className="d-flex flex-md-row flex-column mt-2">
-                            <CFormLabel className="col-sm-3 col-form-label">탭이미지</CFormLabel>
-                            <CCol
-                              md={6}
-                              className="d-flex flex-wrap flex-md-row flex-column align-items-start"
-                            >
-                              <CFormInput
-                                type="text"
-                                id={`tabImageUrl-${input.id}`}
-                                {...register(`tabImageUrl-${input.id}`, {
-                                  required: '탭 이미지를 업로드해주세요.',
-                                })}
-                                placeholder="선택된 파일 없음"
-                                readOnly
-                                className="me-2"
-                              />
-                              <CFormInput
-                                type="file"
-                                id={`tabImage-${input.id}`}
-                                data-index={input.id}
-                                onChange={imageUpload}
-                                ref={(el) => (tabImageUrlInputRef.current[input.id] = el)}
-                                style={{ display: 'none' }}
-                              />
-                            </CCol>
-                            <CCol md={3}>
-                              <CButton
-                                type="button"
-                                onClick={() => tabImageUrlInputRef.current[input.id]?.click()}
-                                color="primary"
+                  {tabList.length > 0 ? (
+                    tabList?.map((input, index) => (
+                      <div key={input.id} className="d-flex">
+                        <CRow className="border-bottom pt-2 pb-2 align-items-center">
+                          <CRow style={{ width: '85%' }}>
+                            <CRow className="d-flex flex-md-row flex-column">
+                              <CFormLabel
+                                htmlFor={`label-${input.id}`}
+                                className="col-sm-3 col-form-label"
                               >
-                                파일 선택
-                              </CButton>
-                            </CCol>
+                                탭 이름
+                              </CFormLabel>
+                              <CCol sm={3}>
+                                <CFormInput
+                                  type="text"
+                                  id={`label-${input.id}`}
+                                  value={input.label}
+                                  onChange={(e) => {
+                                    const newValue = e.target.value
+                                    setTabList((prevTabList) =>
+                                      prevTabList.map((item) =>
+                                        item.id === input.id ? { ...item, label: newValue } : item,
+                                      ),
+                                    )
+                                  }}
+                                  onBlur={(e) => handleBlur('label', input.id, e.target.value)}
+                                />
+                              </CCol>
+                            </CRow>
+                            <CRow className="d-flex flex-md-row flex-column mt-2">
+                              <CFormLabel className="col-sm-3 col-form-label">탭이미지</CFormLabel>
+                              <CCol
+                                md={6}
+                                className="d-flex flex-wrap flex-md-row flex-column align-items-start"
+                              >
+                                <CFormInput
+                                  type="text"
+                                  id={`tabImageUrl-${input.id}`}
+                                  {...register(`tabImageUrl-${input.id}`, {
+                                    required: '탭 이미지를 업로드해주세요.',
+                                  })}
+                                  placeholder="선택된 파일 없음"
+                                  readOnly
+                                  className="me-2"
+                                />
+                                <CFormInput
+                                  type="file"
+                                  id={`tabImage-${input.id}`}
+                                  data-index={input.id}
+                                  onChange={imageUpload}
+                                  ref={(el) => (tabImageUrlInputRef.current[input.id] = el)}
+                                  style={{ display: 'none' }}
+                                />
+                              </CCol>
+                              <CCol md={3}>
+                                <CButton
+                                  type="button"
+                                  onClick={() => tabImageUrlInputRef.current[input.id]?.click()}
+                                  color="primary"
+                                >
+                                  파일 선택
+                                </CButton>
+                              </CCol>
+                            </CRow>
+                            <CRow className="d-flex flex-md-row flex-column mt-2">
+                              <CFormLabel
+                                htmlFor={`url-${input.id}`}
+                                className="col-sm-3 col-form-label"
+                              >
+                                랜딩 URL
+                              </CFormLabel>
+                              <CCol sm={6} className="flex-grow-1">
+                                <CFormInput
+                                  type="text"
+                                  id={`url-${input.id}`}
+                                  placeholder="https://"
+                                  value={input.landingUrl}
+                                  onChange={(e) => {
+                                    const newValue = e.target.value
+                                    setTabList((prevTabList) =>
+                                      prevTabList.map((item) =>
+                                        item.id === input.id
+                                          ? { ...item, landingUrl: newValue }
+                                          : item,
+                                      ),
+                                    )
+                                  }}
+                                  onBlur={(e) => handleBlur('landingUrl', input.id, e.target.value)}
+                                />
+                              </CCol>
+                            </CRow>
                           </CRow>
-                          <CRow className="d-flex flex-md-row flex-column mt-2">
-                            <CFormLabel
-                              htmlFor={`url-${input.id}`}
-                              className="col-sm-3 col-form-label"
-                            >
-                              랜딩 URL
-                            </CFormLabel>
-                            <CCol sm={6} className="flex-grow-1">
-                              <CFormInput
-                                type="text"
-                                id={`url-${input.id}`}
-                                placeholder="https://"
-                                value={input.landingUrl}
-                                onChange={(e) => {
-                                  const newValue = e.target.value
-                                  setTabList((prevTabList) =>
-                                    prevTabList.map((item) =>
-                                      item.id === input.id
-                                        ? { ...item, landingUrl: newValue }
-                                        : item,
-                                    ),
-                                  )
-                                }}
-                                onBlur={(e) => handleBlur('landingUrl', input.id, e.target.value)}
-                              />
-                            </CCol>
+                          <CRow className="ms-2" style={{ width: '15%' }}>
+                            <CButton color="danger" onClick={() => removeTabList(input.id)}>
+                              삭제
+                            </CButton>
                           </CRow>
                         </CRow>
-                        <CRow className="ms-2" style={{ width: '15%' }}>
-                          <CButton color="danger" onClick={() => removeTabList(input.id)}>
-                            삭제
-                          </CButton>
-                        </CRow>
-                      </CRow>
+                      </div>
+                    ))
+                  ) : (
+                    <div style={{ textAlign: 'center', marginTop: '30px' }}>
+                      등록된 탭이 없습니다.
                     </div>
-                  ))}
+                  )}
                 </CContainer>
               </CInputGroup>
             </CForm>

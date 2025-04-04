@@ -112,20 +112,20 @@ const routes = [
   { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
   { path: '/widgets', name: 'Widgets', element: Widgets },
   // geek custom
-  { path: '/login', name: 'Login', element: Login },
+  { path: '/login', name: '로그인', element: Login },
 
   // service
-  { path: '/service/partner', name: 'Partner', element: Partner },
-  { path: '/service/partner/register/:sno', name: 'Partner Detail', element: PartnerRegister },
-  { path: '/service/partner/register', name: 'Partner Register', element: PartnerRegister },
-  { path: '/service/app', name: 'App', element: App },
-  { path: '/service/app/register/:sno', name: 'app register', element: AppRegister },
-  { path: '/service/app/register', name: 'app register', element: AppRegister },
+  { path: '/service/partner', name: '파트너 관리', element: Partner },
+  { path: '/service/partner/register/:sno', name: '파트너 상세', element: PartnerRegister },
+  { path: '/service/partner/register', name: '파트너 등록', element: PartnerRegister },
+  { path: '/service/app', name: '앱', element: App },
+  { path: '/service/app/register/:sno', name: '앱 등록', element: AppRegister },
+  { path: '/service/app/register', name: '앱 등록', element: AppRegister },
 
   // app
-  { path: '/app/push/send', name: 'app push send', element: Send },
-  { path: '/app/design/intro', name: 'app design intro', element: AppIntro },
-  { path: '/app/design/footer', name: 'app design footer', element: Footer },
+  { path: '/app/push/send', name: '앱 푸시 발송', element: Send },
+  { path: '/app/design/intro', name: '인트로 디자인 설정', element: AppIntro },
+  { path: '/app/design/footer', name: '하단 탭 디자인 설정', element: Footer },
 ]
 
 export default routes

@@ -359,9 +359,9 @@ const Footer = () => {
                     </CRow>
                     <CRow style={{ width: '120px', height: '50px', verticalAlign: 'middle' }}>
                       <CButton
-                        color="info"
+                        color="primary"
                         onClick={addTabList}
-                        style={{ display: 'flex', alignItems: 'center' }}
+                        style={{ display: 'flex', alignItems: 'center', height: '40px' }}
                       >
                         <CIcon
                           icon={cilPlus}
@@ -410,7 +410,7 @@ const Footer = () => {
                               </CRow>
                               <CRow className="d-flex flex-md-row flex-column mt-2">
                                 <CFormLabel className="col-sm-3 col-form-label">
-                                  탭이미지
+                                  탭 이미지
                                 </CFormLabel>
                                 <CCol
                                   md={6}

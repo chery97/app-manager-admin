@@ -89,7 +89,7 @@ const PartnerManagement = () => {
           userTel: item.userTel,
           userEmail: item.userEmail,
           details: (
-            <CButton color="light" size="sm" href={`#/service/partner/${item.sno}`}>
+            <CButton color="light" size="sm" href={`#/service/partner/register/${item.sno}`}>
               이동
             </CButton>
           ),

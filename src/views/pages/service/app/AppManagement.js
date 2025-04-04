@@ -83,7 +83,7 @@ const AppManagement = ({ userNo }) => {
           appName: item.appName,
           appUrl: item.appUrl,
           details: (
-            <CButton color="light" size="sm" href={`#/service/app/${item.sno}`}>
+            <CButton color="light" size="sm" href={`#/service/app/register/${item.sno}`}>
               이동
             </CButton>
           ),

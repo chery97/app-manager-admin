@@ -443,7 +443,7 @@ const Footer = () => {
                                   htmlFor={`url-${input.id}`}
                                   className="col-sm-3 col-form-label"
                                 >
-                                  랜딩 URL
+                                  연결 URL
                                 </CFormLabel>
                                 <CCol sm={6} className="flex-grow-1">
                                   <CFormInput
@@ -452,7 +452,7 @@ const Footer = () => {
                                     placeholder="https://"
                                     value={input.landingUrl}
                                     {...register(`url-${input.id}`, {
-                                      required: '탭 이미지를 업로드해주세요.',
+                                      required: '연결할 페이지 주소를 입력해주세요.',
                                     })}
                                     onChange={(e) => {
                                       const newValue = e.target.value

@@ -77,6 +77,10 @@ const Footer = () => {
         setValue(`tabImageUrl-${item.id}`, item.image)
       })
 
+      data.forEach((item) => {
+        setValue(`url-${item.id}`, item.landingUrl)
+      })
+
       return data
     } catch (e) {
       alert(e.message)
@@ -450,7 +454,6 @@ const Footer = () => {
                                     type="text"
                                     id={`url-${input.id}`}
                                     placeholder="https://"
-                                    value={input.landingUrl}
                                     {...register(`url-${input.id}`, {
                                       required: '연결할 페이지 주소를 입력해주세요.',
                                     })}
@@ -463,13 +466,7 @@ const Footer = () => {
                                             : item,
                                         ),
                                       )
-                                      setValue(`url-${input.id}`, (prevTabList) =>
-                                        prevTabList.map((item) =>
-                                          item.id === input.id
-                                            ? { ...item, landingUrl: newValue }
-                                            : item,
-                                        ),
-                                      )
+                                      setValue(`url-${input.id}`, newValue)
                                     }}
                                     onBlur={(e) =>
                                       handleBlur('landingUrl', input.id, e.target.value)

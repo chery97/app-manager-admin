@@ -22,6 +22,7 @@ import footer from 'src/api/app/footer'
 import upload from 'src/api/upload'
 import { useDialog } from 'src/context/Dialogcontext'
 import CIcon from '@coreui/icons-react'
+import app from 'src/api/app'
 
 const Footer = () => {
   const [imageInputs, setImageInputs] = useState([{ id: '0' }])
@@ -72,18 +73,29 @@ const Footer = () => {
     if (!appId) return [] // 앲이 선택되지 않으면 API 요청 X
     try {
       const { data } = await footer.getFooter({ appId }) // 선택한 앱 Id로 백엔드 호출
-      setTabList(data || []) // 가져온 데이터 설정 (없으면 빈 배열)
+      setTabList(data) // 가져온 데이터 설정 (없으면 빈 배열)
 
       // 탭 이미지값이 이미 있는 경우 setValue
       data.forEach((item) => {
         setValue(`tabImageUrl-${item.id}`, item.image)
       })
-      return data || []
+
+      return data
     } catch (e) {
       alert(e.message)
       location.reload()
     }
   }
+
+  const getAppList = async () => {
+    const result = await app.findAll()
+    return result.data.items
+  }
+
+  const { data: appList } = useQuery({
+    queryKey: ['appList'],
+    queryFn: () => getAppList(),
+  })
 
   const {
     data: tabListData,
@@ -92,7 +104,7 @@ const Footer = () => {
     refetch,
   } = useQuery({
     queryKey: ['tabList'],
-    queryFn: () => getTabList(selectedApp),
+    queryFn: () => getTabList(Number(selectedApp)),
   })
 
   // 앱선택시 refetch 실행
@@ -125,6 +137,7 @@ const Footer = () => {
   })
 
   const onSubmit = () => {
+    return
     tabListMutation.mutate({
       tabList,
     })
@@ -289,13 +302,14 @@ const Footer = () => {
               <CInputGroup>
                 <CContainer>
                   <CRow>
-                    <CFormLabel className="col-sm-2 col-form-label">앱선택</CFormLabel>
+                    <CFormLabel className="col-sm-2 col-form-label">앱 선택</CFormLabel>
                     <CFormSelect
                       aria-label="Default select example"
                       options={[
-                        { label: '앱선택', value: '' },
-                        { label: 'One', value: '1' },
-                        { label: 'Two', value: '2' },
+                        { label: '선택', value: '' },
+                        ...(Array.isArray(appList)
+                          ? appList.map((app) => ({ label: app.appName, value: app.sno }))
+                          : []),
                       ]}
                       value={selectedApp}
                       onChange={(e) => {
@@ -311,7 +325,7 @@ const Footer = () => {
                   <CRow className="d-flex mt-lg-5 h-auto align-items-center">
                     <CRow className="d-flex flex-column w-75">
                       <CCol className="">
-                        <p className="text-warning mb-0">&#8251; 탭메뉴 스타일</p>
+                        <p className="text-warning mb-0">&#8251; 탭 메뉴 스타일</p>
                         <p className="w-100" style={{ fontSize: '15px' }}>
                           변경하실 탭메뉴를 선택하시고, 변경등록버튼을 클릭해주세요.
                         </p>
@@ -328,7 +342,7 @@ const Footer = () => {
                           size="lg"
                           style={{ marginRight: '3px', verticalAlign: 'middle' }}
                         />
-                        탭추가
+                        탭 추가
                       </CButton>
                     </CRow>
                   </CRow>
@@ -342,7 +356,7 @@ const Footer = () => {
                               htmlFor={`label-${input.id}`}
                               className="col-sm-3 col-form-label"
                             >
-                              탭이름
+                              탭 이름
                             </CFormLabel>
                             <CCol sm={3}>
                               <CFormInput

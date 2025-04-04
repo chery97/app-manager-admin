@@ -31,6 +31,7 @@ import intro from 'src/api/app'
 import upload from 'src/api/upload'
 import { useDialog } from 'src/context/Dialogcontext'
 import { useNavigate } from 'react-router-dom'
+import app from 'src/api/app'
 
 const Intro = () => {
   const defaultValues = {
@@ -91,6 +92,16 @@ const Intro = () => {
     const result = await intro.getIntro(appId)
     return result.data?.[0] ?? null
   }
+
+  const getAppList = async () => {
+    const result = await app.findAll()
+    return result.data.items
+  }
+
+  const { data: appList } = useQuery({
+    queryKey: ['appList'],
+    queryFn: () => getAppList(),
+  })
 
   const {
     data: introData,
@@ -303,16 +314,14 @@ const Intro = () => {
                           required: '앱을 선택해주세요',
                         })}
                         options={[
-                          { label: '선택', value: '' },
-                          { label: 'One', value: '1' },
-                          { label: 'Two', value: '2' },
+                          { label: '선택', value: '' }, // 기본 옵션 추가
+                          ...(Array.isArray(appList)
+                            ? appList.map((app) => ({ label: app.appName, value: app.sno }))
+                            : []),
                         ]}
                         onChange={(e) => {
                           const newValue = e.target.value
                           setValue('appId', newValue, { shouldValidate: true }) // 값 설정 + 검증 트리거
-
-                          if (newValue === '') {
-                          }
                         }}
                       />
                     </CCol>
@@ -348,7 +357,7 @@ const Intro = () => {
                               type="button"
                               onClick={() => mobileFileInputRef.current.click()}
                               color="primary"
-                              style={{ width: '130px' }}
+                              style={{ width: '130px', whiteSpace: 'nowrap' }}
                             >
                               파일 선택
                             </CButton>
@@ -384,7 +393,7 @@ const Intro = () => {
                               type="button"
                               onClick={() => tableFileInputRef.current.click()}
                               color="primary"
-                              style={{ width: '130px' }}
+                              style={{ width: '130px', whiteSpace: 'nowrap' }}
                             >
                               파일 선택
                             </CButton>
@@ -411,7 +420,7 @@ const Intro = () => {
                               { label: '5s', value: '5' },
                             ]}
                             {...register('duration', {
-                              required: '지속시간을 업로드해주세요.',
+                              required: '지속시간을 선택해주세요.',
                             })}
                           />
                         </CCol>
